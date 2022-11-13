@@ -1,8 +1,13 @@
-import { createUserSchema, verifyUserSchema } from "./../schema/user.schema";
+import {
+  createUserSchema,
+  forgotPasswordSchema,
+  verifyUserSchema
+} from "./../schema/user.schema";
 import { Router } from "express";
 import validateResource from "../middleware/validateResourse";
 import {
   createUserHandler,
+  forgotPasswordHandler,
   getUsers,
   verifyUserHandler
 } from "../controller/user.controller";
@@ -15,4 +20,9 @@ userRouter.get(
   "/verify/:id/:verificationCode",
   validateResource(verifyUserSchema),
   verifyUserHandler
+);
+userRouter.post(
+  "/forgotpassword",
+  validateResource(forgotPasswordSchema),
+  forgotPasswordHandler
 );

@@ -27,18 +27,22 @@ export type CreateUserInput = TypeOf<typeof createUserSchema>["body"];
 
 export const verifyUserSchema = object({
   params: object({
-    id: string(),
-    verificationCode: string()
+    id: string({
+      required_error: "Invalid user id"
+    }),
+    verificationCode: string({
+      required_error: "Invalid verification code"
+    })
   })
 });
 
 export type VerifyUserInput = TypeOf<typeof verifyUserSchema>["params"];
 
-export const resetPasswordSchema = object({
+export const forgotPasswordSchema = object({
   body: object({
     email: string({
       required_error: "Email is required to reset password"
     }).email("Invalid email")
   })
 });
-export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>["body"];
+export type ForgotPasswordInput = TypeOf<typeof forgotPasswordSchema>["body"];

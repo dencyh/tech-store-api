@@ -1,4 +1,4 @@
-import { ResetPasswordInput, VerifyUserInput } from "./../schema/user.schema";
+import { ForgotPasswordInput, VerifyUserInput } from "./../schema/user.schema";
 import { Request, Response } from "express";
 import UserModel from "../model/user.model";
 import { CreateUserInput } from "../schema/user.schema";
@@ -9,7 +9,11 @@ import {
 } from "../services/user.service";
 import logger from "../utils/logger";
 import { v4 as uuid } from "uuid";
-import { sendVerificationEmail, sendEmail } from "../utils/mailer";
+import {
+  sendVerificationEmail,
+  sendEmail,
+  forgotPasswordEmail
+} from "../utils/mailer";
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -56,39 +60,42 @@ export async function verifyUserHandler(
 
       return res.send("User successfully verified");
     }
-
-    return res.send("Could not verify user");
   } catch (e: any) {
     return res.status(500).send("Could not verify user");
   }
 }
 
-export async function resetPasswordHandler(
-  req: Request<{}, {}, ResetPasswordInput>,
+export async function forgotPasswordHandler(
+  req: Request<{}, {}, ForgotPasswordInput>,
   res: Response
 ) {
-  const message =
-    "If a user with that email is registered you will receive a password reset email";
+  try {
+    const message = "If a user exists, you will receive a password reset email";
 
-  const { email } = req.body;
+    const { email } = req.body;
 
-  const user = await findUserByEmail(email);
+    const user = await findUserByEmail(email);
 
-  if (!user) {
-    logger.debug(`User with email ${email} does not exists`);
+    if (!user) {
+      logger.debug(`User with email ${email} does not exists`);
+      return res.send(message);
+    }
+
+    if (!user.verified) {
+      return res.send("User is not verified");
+    }
+
+    // Generate reset link
+    const passwordResetCode = uuid();
+    user.passwordResetCode = passwordResetCode;
+    await user.save();
+
+    // Send email
+    await forgotPasswordEmail(user.toObject());
     return res.send(message);
+  } catch (e: any) {
+    return res.status(500).send(e);
   }
-
-  if (!user.verified) {
-    return res.send("User is not verified");
-  }
-
-  const passwordResetCode = uuid();
-
-  user.passwordResetCode = passwordResetCode;
-  await user.save();
-
-  // Send email with reset link
 }
 
 export async function getUsers(req: Request, res: Response) {

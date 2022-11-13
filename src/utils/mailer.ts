@@ -29,6 +29,15 @@ export async function sendVerificationEmail(user: UserDocument) {
     from: '"BT Store" <bts.store.autoreply@gmail.com>',
     to: user.email,
     subject: "Verification", //
-    html: `<div style="text-align: center; color:#e4e4e4; padding: 40px"><div style="margin:0 auto; max-width: 500px; padding:30px;border-radius: 15px; background: #2c2c2d"><h3>Welcome to BT Store  🛒, ${user.firstName} ${user.lastName}!</h3><h2 style="font-weight: normal" ><a style="color: #c896ff" href='${process.env.API_URL}/api/verify/${user._id}/${user.verificationCode}'>Click here to confirm your e-mail address!</a></h2></div></div>`
+    html: `<div style="text-align: center; color:#e4e4e4; padding: 40px"><div style="margin:0 auto; max-width: 500px; padding:30px;border-radius: 15px; background: #2c2c2d"><h3>Welcome to BT Store  🛒, ${user.firstName} ${user.lastName}!</h3><h2 style="font-weight: normal" ><a style="color: #c896ff" href='${process.env.API_URL}/api/users/verify/${user._id}/${user.verificationCode}'>Click here to confirm your e-mail address!</a></h2></div></div>`
+  });
+}
+
+export async function forgotPasswordEmail(user: UserDocument) {
+  sendEmail({
+    from: '"BT Store" <bts.store.autoreply@gmail.com>',
+    to: user.email,
+    subject: "Reset password",
+    html: `<div style="text-align: center; color:#e4e4e4; padding: 40px"><div style="margin:0 auto; max-width: 500px; padding:30px;border-radius: 15px; background: #2c2c2d"><h2 style="font-weight: normal"><a style="color: #c896ff" href='${process.env.API_URL}/api/users/forgotpassword/${user._id}/${user.verificationCode}'>Click here to reset your password</a></h2></div></div>`
   });
 }
