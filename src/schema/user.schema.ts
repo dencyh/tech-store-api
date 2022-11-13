@@ -33,3 +33,12 @@ export const verifyUserSchema = object({
 });
 
 export type VerifyUserInput = TypeOf<typeof verifyUserSchema>["params"];
+
+export const resetPasswordSchema = object({
+  body: object({
+    email: string({
+      required_error: "Email is required to reset password"
+    }).email("Invalid email")
+  })
+});
+export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>["body"];

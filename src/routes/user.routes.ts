@@ -11,7 +11,7 @@ export const userRouter = Router();
 
 userRouter.post("/", validateResource(createUserSchema), createUserHandler);
 userRouter.get("/", getUsers);
-userRouter.post(
+userRouter.get(
   "/verify/:id/:verificationCode",
   validateResource(verifyUserSchema),
   verifyUserHandler
