@@ -1,15 +1,18 @@
 import dotenv from "dotenv";
 dotenv.config();
+import express from "express";
+import config from "config";
 import cors from "cors";
-import express, { NextFunction, Request, Response } from "express";
 import rootRouter from "./routes/index";
 import logger from "./utils/logger";
+import { connectToDb } from "./utils/connectToDb";
 
 const app = express();
 
-const PORT = process.env.PORT;
-const HOST = process.env.HOST;
+const PORT = config.get("port");
+const HOST = config.get("host");
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
@@ -20,6 +23,8 @@ async function main() {
     app.listen(PORT, () =>
       logger.info(`🚀 Server ready at: http://${HOST}:${PORT}`)
     );
+
+    await connectToDb();
   } catch (e) {
     logger.error(e);
   }

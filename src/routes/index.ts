@@ -1,8 +1,10 @@
 import { Router } from "express";
-import logger from "../utils/logger";
+import { userRouter } from "./user.routes";
 
 const rootRouter = Router();
 
-// rootRouter.use("/users/", userRouter);
+rootRouter.get("/healthcheck", (_, res) => res.sendStatus(200));
+
+rootRouter.use("/users", userRouter);
 
 export default rootRouter;
