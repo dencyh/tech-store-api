@@ -1,14 +1,26 @@
 import UserModel, { UserDocument } from "../model/user.model";
 import logger from "../utils/logger";
 import * as bcrypt from "bcrypt";
+import { omit } from "lodash";
 
-export function validatePassword(password: string, candidatePassword: string) {
-  try {
-    return bcrypt.compareSync(password, candidatePassword);
-  } catch (e) {
-    logger.error(e, "Could not validate password");
+export async function validatePassword({
+  email,
+  password
+}: {
+  email: string;
+  password: string;
+}) {
+  const user = await UserModel.findOne({ email });
+
+  if (!user) {
     return false;
   }
+
+  const isValid = await user.comparePassword(password);
+
+  if (!isValid) return false;
+
+  return omit(user.toJSON(), "password");
 }
 
 export function createUser(input: Partial<UserDocument>) {

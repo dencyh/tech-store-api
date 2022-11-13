@@ -11,10 +11,19 @@ export interface UserDocument extends mongoose.Document {
   password: string;
   verificationCode: string;
   passwordResetCode: string | null;
-  verified: false;
+  verified: boolean;
   createdAt: Date;
   updatedAt: Date;
+  comparePassword: (candidatePassword: string) => Promise<Boolean>;
 }
+
+export const UserPrivateFields = [
+  "password",
+  "__v",
+  "verificationCode",
+  "passwordResetCode",
+  "verified"
+];
 
 const userSchema = new mongoose.Schema(
   {
@@ -35,6 +44,14 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+userSchema.methods.comparePassword = async function (
+  candidatePassword: string
+): Promise<boolean> {
+  const user = this as UserDocument;
+
+  return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
+};
+
 userSchema.pre("save", async function (next) {
   let user = this as UserDocument;
 
@@ -50,6 +67,6 @@ userSchema.pre("save", async function (next) {
   return next();
 });
 
-const UserModel = mongoose.model("User", userSchema);
+const UserModel = mongoose.model<UserDocument>("User", userSchema);
 
 export default UserModel;

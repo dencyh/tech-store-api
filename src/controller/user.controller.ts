@@ -1,4 +1,8 @@
-import { ForgotPasswordInput, VerifyUserInput } from "./../schema/user.schema";
+import {
+  ForgotPasswordInput,
+  ResetPasswordInput,
+  VerifyUserInput
+} from "./../schema/user.schema";
 import { Request, Response } from "express";
 import UserModel from "../model/user.model";
 import { CreateUserInput } from "../schema/user.schema";
@@ -9,11 +13,8 @@ import {
 } from "../services/user.service";
 import logger from "../utils/logger";
 import { v4 as uuid } from "uuid";
-import {
-  sendVerificationEmail,
-  sendEmail,
-  forgotPasswordEmail
-} from "../utils/mailer";
+import { sendVerificationEmail, forgotPasswordEmail } from "../utils/mailer";
+import * as bcrypt from "bcrypt";
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -98,7 +99,48 @@ export async function forgotPasswordHandler(
   }
 }
 
+export async function resetsPasswordHandler(
+  req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
+  res: Response
+) {
+  try {
+    const { id, passwordResetCode } = req.params;
+    const { password } = req.body;
+
+    const user = await findUserById(id);
+
+    if (
+      !user ||
+      !user.passwordResetCode ||
+      user.passwordResetCode !== passwordResetCode
+    ) {
+      return res.status(400).send("Could not reset password");
+    }
+
+    const isPasswordNew = bcrypt.compareSync(user?.password, password);
+    if (!isPasswordNew) {
+      return res
+        .status(400)
+        .send("Password can not be the same as your current password");
+    }
+
+    user.passwordResetCode = "";
+
+    user.password = password;
+
+    await user.save();
+
+    return res.send("Updated password");
+  } catch (e) {
+    return res.status(500).send(e);
+  }
+}
+
 export async function getUsers(req: Request, res: Response) {
   const users = await UserModel.find();
   return res.json(users);
+}
+
+export async function getCurrentUserHandler(req: Request, res: Response) {
+  return res.send(res.locals.user);
 }
