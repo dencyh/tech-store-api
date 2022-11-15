@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { v4 as uuid } from "uuid";
 import { UserDocument } from "./user.model";
 
 export interface SchemaDocument extends mongoose.Document {

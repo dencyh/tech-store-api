@@ -7,6 +7,7 @@ import rootRouter from "./routes/index";
 import logger from "./utils/logger";
 import { connectToDb } from "./utils/connectToDb";
 import deserializeUser from "./middleware/deserializeUser";
+import path from "path";
 
 const app = express();
 
@@ -16,6 +17,10 @@ const HOST = config.get("host");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+app.use(
+  "/static/category",
+  express.static(path.join(__dirname, "../static/category"))
+);
 
 app.use(deserializeUser);
 
