@@ -1,19 +1,20 @@
 import { Request, Response } from "express";
-import { v4 as uuid } from "uuid";
 import { createCategoryInput } from "../schema/category.schema";
 import { createCategory, getCategories } from "../services/product.service";
-import multer from "multer";
 
 export async function createCategoryHandler(
-  req: Request<{}, {}>,
+  req: Request<{}, {}, createCategoryInput>,
   res: Response
 ) {
-  const { title } = req.body;
-  const imgPath = req.file?.path;
-  console.log(imgPath);
+  const { name } = req.body;
+  const imagePath = req.file?.path;
+
+  if (!imagePath) {
+    return res.status(400).send("Image path is required");
+  }
 
   try {
-    const category = await createCategory({ title, image: imgPath });
+    const category = await createCategory({ name, imagePath });
 
     return res.json(category);
   } catch (e: any) {
