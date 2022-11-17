@@ -13,6 +13,7 @@ export const createLaptopSchema = object({
     refreshRate: number({ required_error: "Refresh rate is required" }),
     cpu: string({ required_error: "CPU name is required" }),
     cpuCores: number({ required_error: "CPU cores is required" }),
+    gpu: string({ required_error: "GPU name is required" }),
     ram: number({ required_error: "RAM value is required" }),
     capacity: number({ required_error: "Capacity is required" }),
     batteryLife: number({ required_error: "Battery life is required" })

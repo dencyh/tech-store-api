@@ -1,7 +1,7 @@
 import { LaptopSpecs } from "./laptop.specs";
 import { SmartPhoneSpecs } from "./smartphone.specs.";
 
-type DeviceColor =
+type ProductColor =
   | "белый"
   | "желтый"
   | "зеленый"
@@ -17,7 +17,7 @@ type DeviceColor =
 type Rating = 1 | 2 | 3 | 4 | 5;
 
 export interface BaseSpecs {
-  color: DeviceColor;
+  color: ProductColor;
   brand: string;
   price: number;
   rating: Rating;

@@ -3,26 +3,37 @@ import mongoose from "mongoose";
 import { UserDocument } from "./user.model";
 import { CategoryDocument } from "./category.model";
 import { TypeDocument } from "./type.model";
-import { number } from "joi";
+import {
+  createProductInput,
+  ProductColor,
+  productTypeSchemas
+} from "../schema/products/core.product.schema";
+import { BrandDocument } from "./brand.model";
 
 export interface ProductDocument extends mongoose.Document {
-  user: UserDocument["_id"];
-  category: CategoryDocument["_id"];
-  type: TypeDocument["_id"];
-  title: string;
-  description: string;
+  type: keyof typeof productTypeSchemas;
+  name: string;
   price: number;
-  image: string;
+  brand: BrandDocument["_id"];
+  color: ProductColor;
+  releaseDate: number;
+  description: string;
+  imagePaths?: string[];
+  spec: Partial<createProductInput>;
   createdAt: Date;
   updatedAt: Date;
 }
 
 const productSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    price: { type: String, required: true },
-    image: { type: String, required: true }
+    type: { type: String, required: true },
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand" },
+    color: { type: String, required: true, default: "черный" },
+    releaseDate: { type: Number, required: true },
+    imagePaths: { type: Array, default: [] },
+    specs: { type: Object, required: true }
   },
   {
     timestamps: true

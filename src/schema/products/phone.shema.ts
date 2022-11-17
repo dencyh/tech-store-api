@@ -1,12 +1,10 @@
 import { literal, number, object, string, tuple, TypeOf, union } from "zod";
 import { createProductSchema } from "./core.product.schema";
 
-export const createSmartphoneSchema = object({
+export const createPhoneSchema = object({
   body: object({
     ...createProductSchema,
     type: literal("phone", { required_error: "Type is required" }),
-    name: string({ required_error: "Product name is required" }),
-    model: string({ required_error: "Model is required" }),
     os: string({ required_error: "OS is required" }),
     screenSize: number({ required_error: "Screensize is required" }),
     resolution: tuple([number(), number()], {
@@ -25,6 +23,4 @@ export const createSmartphoneSchema = object({
   })
 });
 
-export type createSmartphoneInput = TypeOf<
-  typeof createSmartphoneSchema
->["body"];
+export type createPhoneInput = TypeOf<typeof createPhoneSchema>["body"];

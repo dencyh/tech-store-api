@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { createCategoryInput } from "../schema/category.schema";
-import { createCategory, getCategories } from "../services/product.service";
+import { createCategory, getCategories } from "../services/category.service";
 
 export async function createCategoryHandler(
   req: Request<{}, {}, createCategoryInput>,

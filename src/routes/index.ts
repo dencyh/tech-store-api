@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { categoryRouter } from "./category.routes";
+import { productRouter } from "./product.routes";
 import { authRouter } from "./session.routes";
 import { userRouter } from "./user.routes";
 
@@ -10,5 +11,6 @@ rootRouter.get("/healthcheck", (_, res) => res.sendStatus(200));
 rootRouter.use("/users", userRouter);
 rootRouter.use("/sessions", authRouter);
 rootRouter.use("/categories", categoryRouter);
+rootRouter.use("/products", productRouter);
 
 export default rootRouter;

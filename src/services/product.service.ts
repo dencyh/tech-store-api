@@ -1,9 +1,9 @@
-import CategoryModel, { CategoryDocument } from "../model/category.model";
+import ProductModel, { ProductDocument } from "../model/product.model";
 
-export function createCategory(input: Partial<CategoryDocument>) {
-  return CategoryModel.create(input);
+export function createProduct(input: Partial<ProductDocument>) {
+  return ProductModel.create(input);
 }
 
-export function getCategories() {
-  return CategoryModel.find();
+export function getProducts() {
+  return ProductModel.find();
 }
