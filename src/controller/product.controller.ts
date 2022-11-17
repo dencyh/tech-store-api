@@ -1,16 +1,23 @@
 import { createProductInput } from "./../schema/products/core.product.schema";
 import { Request, Response } from "express";
 import { createProduct, getProducts } from "../services/product.service";
+import _ from "lodash";
+import { findBrandByName } from "../services/brand.service";
 
 export async function createProductHandler(
   req: Request<{}, {}, createProductInput>,
   res: Response
 ) {
   const body = req.body;
-  console.log(req.files);
+
+  const { brandName } = req.body;
+
+  const brand = await findBrandByName(brandName.toLowerCase());
+
+  const productInput = _.omit(body, "brand");
 
   try {
-    const product = await createProduct(body);
+    const product = await createProduct({ ...productInput, brand });
 
     return res.json(product);
   } catch (e: any) {

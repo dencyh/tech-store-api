@@ -1,21 +1,24 @@
+import { addProductImagesSchema } from "./../schema/products/core.product.schema";
 import { Router } from "express";
 import { uploadImage } from "../middleware/uploadImage";
 
 import {
   getProductsHandler,
-  createProductHandler
+  createProductHandler,
+  addProductImagesHandler
 } from "../controller/product.controller";
 import validateResource from "../middleware/validateResourse";
-import { createCategorySchema } from "../schema/category.schema";
 import { validateProduct } from "../middleware/validateProduct";
 
 export const productRouter = Router();
 
-productRouter.post(
-  "/",
+productRouter.post("/", validateProduct, createProductHandler);
+
+productRouter.put(
+  "/products/:id",
   uploadImage("product/").array("image"),
-  validateProduct,
-  createProductHandler
+  validateResource(addProductImagesSchema),
+  addProductImagesHandler
 );
 
 productRouter.get("/", getProductsHandler);

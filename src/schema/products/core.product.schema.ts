@@ -33,7 +33,7 @@ const colors = [
 export const createProductSchema = {
   name: string({ required_error: "Product name is required" }),
   price: number({ required_error: "Price is required" }),
-  brand: string({ required_error: "Brand name is required" }),
+  brandName: string({ required_error: "Brand name is required" }),
   color: union(colors, { required_error: "Color is required" }),
   releaseDate: number({ required_error: "Release date is required" })
 };
@@ -45,10 +45,12 @@ export const productTypeSchemas = {
   laptop: createLaptopSchema
 };
 
-export const addProductImagesSchema = {
-  body: object({
-    _id: string({ required_error: "Id is required to update images" })
+export const addProductImagesSchema = object({
+  params: object({
+    id: string({ required_error: "Id is required to update images" })
   })
-};
+});
 
-export type AddProductImagesInput = TypeOf<typeof createLaptopSchema>["body"];
+export type AddProductImagesInput = TypeOf<
+  typeof addProductImagesSchema
+>["params"];

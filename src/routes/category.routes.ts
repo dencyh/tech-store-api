@@ -1,6 +1,5 @@
 import { createCategorySchema } from "./../schema/category.schema";
 import { Router } from "express";
-import multer from "multer";
 import {
   createCategoryHandler,
   getCategoriesHandler

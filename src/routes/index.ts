@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { brandRouter } from "./brand.routes";
 import { categoryRouter } from "./category.routes";
 import { productRouter } from "./product.routes";
 import { authRouter } from "./session.routes";
@@ -12,5 +13,6 @@ rootRouter.use("/users", userRouter);
 rootRouter.use("/sessions", authRouter);
 rootRouter.use("/categories", categoryRouter);
 rootRouter.use("/products", productRouter);
+rootRouter.use("/brands", brandRouter);
 
 export default rootRouter;

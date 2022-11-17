@@ -8,7 +8,7 @@ export interface BrandDocument extends mongoose.Document {
 
 const brandSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true }
+    name: { type: String, required: true, unique: true }
   },
   {
     timestamps: true
