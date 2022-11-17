@@ -27,8 +27,7 @@ export async function createUserHandler(
 
     await sendVerificationEmail(user.toObject());
 
-    return res.send("User created");
-    // return res.json(user);
+    return res.json(user);
   } catch (e: any) {
     if (e.code === 11000) {
       return res.status(409).send("Account already exists");

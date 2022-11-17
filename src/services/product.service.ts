@@ -4,6 +4,10 @@ export function createProduct(input: Partial<ProductDocument>) {
   return ProductModel.create(input);
 }
 
-export function getProducts() {
+export function findAllProducts() {
   return ProductModel.find();
+}
+
+export function findProductsById(id: string) {
+  return ProductModel.findById(id);
 }

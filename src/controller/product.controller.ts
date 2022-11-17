@@ -1,6 +1,13 @@
-import { createProductInput } from "./../schema/products/core.product.schema";
+import {
+  createProductInput,
+  FindProductInput
+} from "./../schema/products/core.product.schema";
 import { Request, Response } from "express";
-import { createProduct, getProducts } from "../services/product.service";
+import {
+  createProduct,
+  findAllProducts,
+  findProductsById
+} from "../services/product.service";
 import _ from "lodash";
 import { findBrandByName } from "../services/brand.service";
 
@@ -32,10 +39,23 @@ export async function addProductImagesHandler(req: Request, res: Response) {
   }
 }
 
-export async function getProductsHandler(req: Request, res: Response) {
+export async function findAllProductsHandler(req: Request, res: Response) {
   try {
-    const categories = await getProducts();
-    return res.json(categories);
+    const products = await findAllProducts();
+    return res.json(products);
+  } catch (e) {
+    return res.status(500).send(e);
+  }
+}
+
+export async function findProductsHandler(
+  req: Request<FindProductInput>,
+  res: Response
+) {
+  try {
+    const { id } = req.params;
+    const product = await findProductsById(id);
+    return res.json(product);
   } catch (e) {
     return res.status(500).send(e);
   }

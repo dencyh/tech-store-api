@@ -54,3 +54,13 @@ export const addProductImagesSchema = object({
 export type AddProductImagesInput = TypeOf<
   typeof addProductImagesSchema
 >["params"];
+
+export const findProductSchema = object({
+  params: object({
+    id: string({
+      required_error: "Invalid user id"
+    })
+  })
+});
+
+export type FindProductInput = TypeOf<typeof findProductSchema>["params"];
