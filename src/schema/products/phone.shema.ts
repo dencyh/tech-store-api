@@ -4,7 +4,7 @@ import { createProductSchema } from "./core.product.schema";
 export const createPhoneSchema = object({
   body: object({
     ...createProductSchema,
-    type: literal("phone", { required_error: "Type is required" }),
+    type: literal("smartphones", { required_error: "Type is required" }),
     specs: object({
       os: string({ required_error: "OS is required" }),
       screenSize: number({ required_error: "Screensize is required" }),

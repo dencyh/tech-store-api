@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 export interface CategoryDocument extends mongoose.Document {
   name: string;
+  path: string;
   imagePath: string;
   createdAt: Date;
   updatedAt: Date;
@@ -9,7 +10,8 @@ export interface CategoryDocument extends mongoose.Document {
 
 const categorySchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
+    type: { type: String, required: true, unique: true },
     imagePath: { type: String, required: true }
   },
   {

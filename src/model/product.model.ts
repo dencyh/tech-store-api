@@ -14,6 +14,7 @@ export interface ProductDocument extends mongoose.Document {
   type: keyof typeof productTypeSchemas;
   name: string;
   price: number;
+  category: CategoryDocument["_id"];
   brand: BrandDocument["_id"];
   color: ProductColor;
   releaseDate: number;
@@ -29,6 +30,7 @@ const productSchema = new mongoose.Schema(
     type: { type: String, required: true },
     name: { type: String, required: true },
     price: { type: Number, required: true },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
     brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand" },
     color: { type: String, required: true, default: "черный" },
     releaseDate: { type: Number, required: true },

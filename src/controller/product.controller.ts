@@ -1,30 +1,35 @@
 import {
   createProductInput,
+  FindManyProductInput,
   FindProductInput
 } from "./../schema/products/core.product.schema";
 import { Request, Response } from "express";
 import {
   createProduct,
-  findAllProducts,
-  findProductsById
+  findProductsWithParams,
+  findProductById
 } from "../services/product.service";
 import _ from "lodash";
 import { findBrandByName } from "../services/brand.service";
+import { findCategoryByType } from "../services/category.service";
 
 export async function createProductHandler(
   req: Request<{}, {}, createProductInput>,
   res: Response
 ) {
-  const body = req.body;
-
-  const { brandName } = req.body;
-
-  const brand = await findBrandByName(brandName.toLowerCase());
-
-  const productInput = _.omit(body, "brand");
-
   try {
-    const product = await createProduct({ ...productInput, brand });
+    const body = req.body;
+
+    const { brandName, type } = req.body;
+
+    const brand = await findBrandByName(brandName.toLowerCase());
+    if (!brand) return res.status(400).send("Brand does not exists");
+    const category = await findCategoryByType(type.toLowerCase());
+    if (!category) return res.status(400).send("Category does not exists");
+
+    const productInput = _.omit(body, "brand");
+
+    const product = await createProduct({ ...productInput, brand, category });
 
     return res.json(product);
   } catch (e: any) {
@@ -39,22 +44,28 @@ export async function addProductImagesHandler(req: Request, res: Response) {
   }
 }
 
-export async function findAllProductsHandler(req: Request, res: Response) {
+export async function findAllProductsHandler(
+  req: Request<{}, {}, {}, FindManyProductInput>,
+  res: Response
+) {
   try {
-    const products = await findAllProducts();
+    const params = req.query;
+
+    const products = await findProductsWithParams(params);
+
     return res.json(products);
   } catch (e) {
     return res.status(500).send(e);
   }
 }
 
-export async function findProductsHandler(
+export async function findOneProductHandler(
   req: Request<FindProductInput>,
   res: Response
 ) {
   try {
     const { id } = req.params;
-    const product = await findProductsById(id);
+    const product = await findProductById(id);
     return res.json(product);
   } catch (e) {
     return res.status(500).send(e);

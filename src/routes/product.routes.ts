@@ -1,5 +1,6 @@
 import {
   addProductImagesSchema,
+  findManyProductsSchema,
   findProductSchema
 } from "./../schema/products/core.product.schema";
 import { Router } from "express";
@@ -9,7 +10,7 @@ import {
   createProductHandler,
   addProductImagesHandler,
   findAllProductsHandler,
-  findProductsHandler
+  findOneProductHandler
 } from "../controller/product.controller";
 import validateResource from "../middleware/validateResourse";
 import { validateProduct } from "../middleware/validateProduct";
@@ -25,9 +26,15 @@ productRouter.put(
   addProductImagesHandler
 );
 
-productRouter.get("/", findAllProductsHandler);
+productRouter.get(
+  "/",
+  validateResource(findManyProductsSchema),
+  findAllProductsHandler
+);
 productRouter.get(
   "/:id",
   validateResource(findProductSchema),
-  findProductsHandler
+  findOneProductHandler
 );
+
+productRouter.get("/:category", validateResource(findProductSchema));

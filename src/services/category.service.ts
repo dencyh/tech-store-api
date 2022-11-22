@@ -7,3 +7,7 @@ export function createCategory(input: Partial<CategoryDocument>) {
 export function getCategories() {
   return CategoryModel.find();
 }
+
+export function findCategoryByType(type: string) {
+  return CategoryModel.findOne({ type });
+}

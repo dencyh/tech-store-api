@@ -1,66 +1,65 @@
 import { createPhoneSchema } from "./phone.shema";
 import { createLaptopInput, createLaptopSchema } from "./laptop.shema";
-import { date, literal, number, object, string, TypeOf, union } from "zod";
+import { z } from "zod";
 import { createPhoneInput } from "./phone.shema";
 
-export type ProductColor =
-  | "белый"
-  | "желтый"
-  | "зеленый"
-  | "золотой"
-  | "коричневый"
-  | "розовый"
-  | "серебристый"
-  | "серый"
-  | "синий"
-  | "фиолетовый"
-  | "черный";
+const colorsEnum = z.enum([
+  "белый",
+  "желтый",
+  "зеленый",
+  "золотой",
+  "коричневый",
+  "розовый",
+  "серебристый",
+  "серый",
+  "синий",
+  "фиолетовый",
+  "черный"
+]);
 
-const colors = [
-  literal("белый"),
-  literal("желтый"),
-  literal("зеленый"),
-  literal("золотой"),
-  literal("коричневый"),
-  literal("розовый"),
-  literal("серебристый"),
-  literal("серый"),
-  literal("синий"),
-  literal("фиолетовый"),
-  literal("черный")
-] as const;
+export type ProductColor = z.infer<typeof colorsEnum>;
 
 export const createProductSchema = {
-  name: string({ required_error: "Product name is required" }),
-  price: number({ required_error: "Price is required" }),
-  brandName: string({ required_error: "Brand name is required" }),
-  color: union(colors, { required_error: "Color is required" }),
-  releaseDate: number({ required_error: "Release date is required" })
+  name: z.string({ required_error: "Product name is required" }),
+  price: z.number({ required_error: "Price is required" }),
+  brandName: z.string({ required_error: "Brand name is required" }),
+  color: colorsEnum,
+  releaseDate: z.number({ required_error: "Release date is required" })
 };
 
 export type createProductInput = createPhoneInput | createLaptopInput;
 
 export const productTypeSchemas = {
-  phone: createPhoneSchema,
-  laptop: createLaptopSchema
+  smartphones: createPhoneSchema,
+  laptops: createLaptopSchema
 };
 
-export const addProductImagesSchema = object({
-  params: object({
-    id: string({ required_error: "Id is required to update images" })
+export const addProductImagesSchema = z.object({
+  params: z.object({
+    id: z.string({ required_error: "Id is required to update images" })
   })
 });
 
-export type AddProductImagesInput = TypeOf<
+export type AddProductImagesInput = z.infer<
   typeof addProductImagesSchema
 >["params"];
 
-export const findProductSchema = object({
-  params: object({
-    id: string({
-      required_error: "Invalid user id"
+export const findProductSchema = z.object({
+  params: z.object({
+    id: z.string({
+      required_error: "Product id is required"
     })
   })
 });
 
-export type FindProductInput = TypeOf<typeof findProductSchema>["params"];
+export type FindProductInput = z.infer<typeof findProductSchema>["params"];
+
+export const findManyProductsSchema = z.object({
+  query: z.object({
+    type: z.string().optional()
+  })
+});
+
+export type FindManyProductInput = z.infer<
+  typeof findManyProductsSchema
+>["query"];
