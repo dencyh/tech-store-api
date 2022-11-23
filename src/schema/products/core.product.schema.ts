@@ -24,7 +24,8 @@ export const createProductSchema = {
   price: z.number({ required_error: "Price is required" }),
   brandName: z.string({ required_error: "Brand name is required" }),
   color: colorsEnum,
-  releaseDate: z.number({ required_error: "Release date is required" })
+  releaseDate: z.number({ required_error: "Release date is required" }),
+  imagePaths: z.array(z.string()).optional()
 };
 
 export type createProductInput = createPhoneInput | createLaptopInput;
@@ -36,7 +37,7 @@ export const productTypeSchemas = {
 
 export const addProductImagesSchema = z.object({
   params: z.object({
-    id: z.string({ required_error: "Id is required to update images" })
+    id: z.string({ required_error: "Product id is required to update images" })
   })
 });
 

@@ -1,4 +1,5 @@
 import {
+  AddProductImagesInput,
   createProductInput,
   FindManyProductInput,
   FindProductInput
@@ -7,7 +8,8 @@ import { Request, Response } from "express";
 import {
   createProduct,
   findProductsWithParams,
-  findProductById
+  findProductById,
+  addProductImages
 } from "../services/product.service";
 import _ from "lodash";
 import { findBrandByName } from "../services/brand.service";
@@ -37,10 +39,26 @@ export async function createProductHandler(
   }
 }
 
-export async function addProductImagesHandler(req: Request, res: Response) {
-  const imagePath = req.file?.path;
-  if (!imagePath) {
-    return res.status(400).send("Image path is required");
+export async function addProductImagesHandler(
+  req: Request<AddProductImagesInput>,
+  res: Response
+) {
+  try {
+    const { id } = req.params;
+    const images = req.files as [];
+
+    if (!images) {
+      return res.status(400).send("At least one image is required");
+    }
+
+    const imagePaths = images.map((img: any) => img.path);
+
+    const updated = await addProductImages(id, imagePaths);
+    console.log(updated);
+
+    return res.send("Images were added");
+  } catch (e) {
+    return res.status(500).send(e);
   }
 }
 

@@ -19,7 +19,7 @@ export const productRouter = Router();
 
 productRouter.post("/", validateProduct, createProductHandler);
 
-productRouter.put(
+productRouter.patch(
   "/:id",
   uploadImage("product/").array("image"),
   validateResource(addProductImagesSchema),

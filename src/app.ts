@@ -21,6 +21,10 @@ app.use(
   "/static/category",
   express.static(path.join(__dirname, "../static/category"))
 );
+app.use(
+  "/static/product",
+  express.static(path.join(__dirname, "../static/product"))
+);
 
 app.use(deserializeUser);
 
