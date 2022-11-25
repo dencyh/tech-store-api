@@ -4,7 +4,7 @@ import { UserDocument } from "./user.model";
 import { CategoryDocument } from "./category.model";
 import { TypeDocument } from "./type.model";
 import {
-  createProductInput,
+  CreateProductInput,
   ProductColor,
   productTypeSchemas
 } from "../schema/products/core.product.schema";
@@ -20,7 +20,7 @@ export interface ProductDocument extends mongoose.Document {
   releaseDate: number;
   description: string;
   imagePaths?: string[];
-  spec: Partial<createProductInput>;
+  spec: Partial<CreateProductInput>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,6 +29,7 @@ const productSchema = new mongoose.Schema(
   {
     type: { type: String, required: true },
     name: { type: String, required: true },
+    description: { type: String, default: "" },
     price: { type: Number, required: true },
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
     brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand" },

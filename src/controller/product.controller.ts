@@ -1,6 +1,6 @@
 import {
   AddProductImagesInput,
-  createProductInput,
+  CreateProductInput,
   FindManyProductInput,
   FindProductInput
 } from "./../schema/products/core.product.schema";
@@ -16,7 +16,7 @@ import { findBrandByName } from "../services/brand.service";
 import { findCategoryByType } from "../services/category.service";
 
 export async function createProductHandler(
-  req: Request<{}, {}, createProductInput>,
+  req: Request<{}, {}, CreateProductInput>,
   res: Response
 ) {
   try {
