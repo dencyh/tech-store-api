@@ -14,6 +14,8 @@ import {
 } from "../controller/product.controller";
 import validateResource from "../middleware/validateResourse";
 import { validateProduct } from "../middleware/validateProduct";
+import { resizeImage } from "../middleware/resizeImage";
+import { bufferImages } from "../middleware/bufferImage";
 
 export const productRouter = Router();
 
@@ -21,7 +23,9 @@ productRouter.post("/", validateProduct, createProductHandler);
 
 productRouter.patch(
   "/:id",
-  uploadImage("product/").array("image"),
+  bufferImages,
+  // uploadImage("product/").array("image"),
+  resizeImage("product"),
   validateResource(addProductImagesSchema),
   addProductImagesHandler
 );

@@ -54,9 +54,8 @@ export async function addProductImagesHandler(
     const imagePaths = images.map((img: any) => img.path);
 
     const updated = await addProductImages(id, imagePaths);
-    console.log(updated);
 
-    return res.send("Images were added");
+    return res.json(updated);
   } catch (e) {
     return res.status(500).send(e);
   }
