@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export interface CategoryDocument extends mongoose.Document {
   name: string;
   path: string;
-  imagePath: string;
+  image: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -12,7 +12,7 @@ const categorySchema = new mongoose.Schema(
   {
     name: { type: String, required: true, unique: true },
     type: { type: String, required: true, unique: true },
-    imagePath: { type: String, required: true }
+    image: { type: String, required: true }
   },
   {
     timestamps: true
