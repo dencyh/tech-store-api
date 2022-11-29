@@ -1,3 +1,4 @@
+import { cartRouter } from "./cart.routes";
 import { Router } from "express";
 import { brandRouter } from "./brand.routes";
 import { categoryRouter } from "./category.routes";
@@ -14,5 +15,6 @@ rootRouter.use("/sessions", authRouter);
 rootRouter.use("/categories", categoryRouter);
 rootRouter.use("/products", productRouter);
 rootRouter.use("/brands", brandRouter);
+rootRouter.use("/cart", cartRouter);
 
 export default rootRouter;

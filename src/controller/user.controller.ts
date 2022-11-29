@@ -15,6 +15,7 @@ import logger from "../utils/logger";
 import { v4 as uuid } from "uuid";
 import { sendVerificationEmail, forgotPasswordEmail } from "../utils/mailer";
 import * as bcrypt from "bcrypt";
+import { createCart } from "../services/cart.service";
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -24,10 +25,11 @@ export async function createUserHandler(
 
   try {
     const user = await createUser(body);
+    const userCart = await createCart(user._id);
 
     await sendVerificationEmail(user.toObject());
 
-    return res.json(user);
+    return res.json({ user, userCart });
   } catch (e: any) {
     if (e.code === 11000) {
       return res.status(409).send("Account already exists");
