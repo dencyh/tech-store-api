@@ -31,6 +31,7 @@ export async function createUserHandler(
 
     return res.json({ user, userCart });
   } catch (e: any) {
+    logger.error(e);
     if (e.code === 11000) {
       return res.status(409).send("Account already exists");
     }
@@ -63,6 +64,7 @@ export async function verifyUserHandler(
       return res.send("User successfully verified");
     }
   } catch (e: any) {
+    logger.error(e);
     return res.status(500).send("Could not verify user");
   }
 }
@@ -96,6 +98,7 @@ export async function forgotPasswordHandler(
     await forgotPasswordEmail(user.toObject());
     return res.send(message);
   } catch (e: any) {
+    logger.error(e);
     return res.status(500).send(e);
   }
 }
@@ -133,6 +136,7 @@ export async function resetsPasswordHandler(
 
     return res.send("Updated password");
   } catch (e) {
+    logger.error(e);
     return res.status(500).send(e);
   }
 }

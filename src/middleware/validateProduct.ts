@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { productTypeSchemas } from "../schema/products/core.product.schema";
+import logger from "../utils/logger";
 
 export const validateProduct = async (
   req: Request,
@@ -25,6 +26,7 @@ export const validateProduct = async (
 
     next();
   } catch (e: any) {
+    logger.error(e);
     return res.status(400).send(e.errors || "This product type doesn't exist");
   }
 };

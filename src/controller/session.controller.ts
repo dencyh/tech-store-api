@@ -12,6 +12,7 @@ import {
 } from "../services/session.service";
 import { get } from "lodash";
 import { verifyJwt } from "../utils/jwt";
+import logger from "../utils/logger";
 
 export async function createSessionHandler(
   req: Request<{}, {}, createSessionInput>,
@@ -45,6 +46,7 @@ export async function createSessionHandler(
       refreshToken
     });
   } catch (e) {
+    logger.error(e);
     return e;
   }
 }

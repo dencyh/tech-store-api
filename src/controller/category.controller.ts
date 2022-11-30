@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { createCategoryInput } from "../schema/category.schema";
 import { createCategory, getCategories } from "../services/category.service";
+import logger from "../utils/logger";
 
 export async function createCategoryHandler(
   req: Request<{}, {}, createCategoryInput>,
@@ -18,6 +19,7 @@ export async function createCategoryHandler(
 
     return res.json(category);
   } catch (e: any) {
+    logger.error(e);
     return res.status(500).send(e);
   }
 }
@@ -27,6 +29,7 @@ export async function getCategoriesHandler(req: Request, res: Response) {
     const categories = await getCategories();
     return res.json(categories);
   } catch (e) {
+    logger.error(e);
     return res.status(500).send(e);
   }
 }

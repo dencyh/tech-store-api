@@ -14,6 +14,7 @@ import {
 import _ from "lodash";
 import { findBrandByName } from "../services/brand.service";
 import { findCategoryByType } from "../services/category.service";
+import logger from "../utils/logger";
 
 export async function createProductHandler(
   req: Request<{}, {}, CreateProductInput>,
@@ -35,6 +36,7 @@ export async function createProductHandler(
 
     return res.json(product);
   } catch (e: any) {
+    logger.error(e);
     return res.status(500).send(e);
   }
 }
@@ -57,6 +59,7 @@ export async function addProductImagesHandler(
 
     return res.json(updated);
   } catch (e) {
+    logger.error(e);
     return res.status(500).send(e);
   }
 }
@@ -72,6 +75,7 @@ export async function findAllProductsHandler(
 
     return res.json(products);
   } catch (e) {
+    logger.error(e);
     return res.status(500).send(e);
   }
 }
@@ -85,6 +89,7 @@ export async function findOneProductHandler(
     const product = await findProductById(id);
     return res.json(product);
   } catch (e) {
+    logger.error(e);
     return res.status(500).send(e);
   }
 }
