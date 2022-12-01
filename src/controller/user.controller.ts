@@ -16,6 +16,7 @@ import { v4 as uuid } from "uuid";
 import { sendVerificationEmail, forgotPasswordEmail } from "../utils/mailer";
 import * as bcrypt from "bcrypt";
 import { createCart } from "../services/cart.service";
+import { createBookmark } from "../services/bookmark.service";
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -26,10 +27,11 @@ export async function createUserHandler(
   try {
     const user = await createUser(body);
     const userCart = await createCart(user._id);
+    const userBookmarks = await createBookmark(user._id);
 
     await sendVerificationEmail(user.toObject());
 
-    return res.json({ user, userCart });
+    return res.json({ user });
   } catch (e: any) {
     logger.error(e);
     if (e.code === 11000) {

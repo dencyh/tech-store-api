@@ -5,6 +5,7 @@ import { categoryRouter } from "./category.routes";
 import { productRouter } from "./product.routes";
 import { authRouter } from "./session.routes";
 import { userRouter } from "./user.routes";
+import { bookmarkRouter } from "./bookmark.routes";
 
 const rootRouter = Router();
 
@@ -16,5 +17,6 @@ rootRouter.use("/categories", categoryRouter);
 rootRouter.use("/products", productRouter);
 rootRouter.use("/brands", brandRouter);
 rootRouter.use("/cart", cartRouter);
+rootRouter.use("/bookmarks", bookmarkRouter);
 
 export default rootRouter;

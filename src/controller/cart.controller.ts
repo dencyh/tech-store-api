@@ -46,7 +46,7 @@ export async function getCartHandler(
 }
 
 export async function getCartProductsHandler(
-  req: Request<CartParamsInput, {}, GetCartProductsInput>,
+  req: Request<CartParamsInput, {}>,
   res: Response
 ) {
   try {
