@@ -1,3 +1,4 @@
+import { requireUser } from "./../middleware/requireUser";
 import {
   cartParamsSchema,
   getCartProductsSchema

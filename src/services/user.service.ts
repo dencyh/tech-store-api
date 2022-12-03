@@ -2,6 +2,7 @@ import UserModel, { UserDocument } from "../model/user.model";
 import logger from "../utils/logger";
 import * as bcrypt from "bcrypt";
 import { omit } from "lodash";
+import { FilterQuery } from "mongoose";
 
 export async function validatePassword({
   email,
@@ -33,4 +34,8 @@ export function findUserById(id: string) {
 
 export function findUserByEmail(email: string) {
   return UserModel.findOne({ email });
+}
+
+export async function findUser(query: FilterQuery<UserDocument>) {
+  return UserModel.findOne(query).lean();
 }

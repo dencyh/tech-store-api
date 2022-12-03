@@ -1,81 +1,91 @@
-import { createSessionInput } from "../schema/session.schema";
 import { Request, Response } from "express";
+import config from "config";
+import { validatePassword } from "../services/user.service";
 import {
-  findUserByEmail,
-  findUserById,
-  validatePassword
-} from "../services/user.service";
-import {
-  findSessionById,
-  signAccessToken,
-  signRefreshToken
+  createSession,
+  findSessions,
+  updateSession
 } from "../services/session.service";
-import { get } from "lodash";
-import { verifyJwt } from "../utils/jwt";
+import { signJwt } from "../utils/jwt";
 import logger from "../utils/logger";
 
-export async function createSessionHandler(
-  req: Request<{}, {}, createSessionInput>,
-  res: Response
-) {
+export async function createUserSessionHandler(req: Request, res: Response) {
   try {
-    const message = "Invalid email or password";
-    const { email, password } = req.body;
-
-    const user = await findUserByEmail(email);
+    // Validate the user's password
+    const user = await validatePassword(req.body);
 
     if (!user) {
-      return res.send(message);
+      return res.status(401).send("Invalid email or password");
     }
 
-    if (!user.verified) {
-      return res.send("Please verify your email");
-    }
+    // create a session
+    const session = await createSession(user._id, req.get("user-agent") || "");
 
-    const isValid = await validatePassword({ email, password });
+    // create an access token
 
-    if (!isValid) {
-      return res.send(message);
-    }
+    const accessToken = signJwt(
+      { ...user, session: session._id },
+      { expiresIn: config.get("accessTokenTtl") }
+    );
 
-    const accessToken = signAccessToken(user);
-    const refreshToken = await signRefreshToken({ userId: user.id });
+    // create a refresh token
+    const refreshToken = signJwt(
+      { ...user, session: session._id },
+      { expiresIn: config.get("refreshTokenTtl") }
+    );
 
-    return res.send({
-      accessToken,
-      refreshToken
+    // return access & refresh tokens
+
+    res.cookie("accessToken", accessToken, {
+      maxAge: 1000 * 60 * 15,
+      httpOnly: true,
+      domain: "localhost",
+      path: "/",
+      sameSite: "strict",
+      secure: false
     });
-  } catch (e) {
+
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 365,
+      httpOnly: true,
+      domain: "localhost",
+      path: "/",
+      sameSite: "strict",
+      secure: false
+    });
+
+    return res.send({ accessToken, refreshToken });
+  } catch (e: any) {
     logger.error(e);
-    return e;
+    return res.status(500).send(e);
   }
 }
 
-export async function refreshAccessTokenHandler(req: Request, res: Response) {
-  const message = "Could not refresh access token";
-  const refreshToken = get(req, "headers.x-refresh")?.toString() || "";
+export async function getUserSessionsHandler(req: Request, res: Response) {
+  try {
+    const userId = res.locals.user._id;
 
-  const decoded = verifyJwt<{ session: string }>(
-    refreshToken,
-    "refreshTokenPublicKey"
-  );
-  if (!decoded) {
-    return res.status(401).send(message);
+    const sessions = await findSessions({ user: userId, valid: true });
+
+    return res.send(sessions);
+  } catch (e) {
+    logger.error(e);
+    return res.status(500).send(e);
   }
+}
 
-  const session = await findSessionById(decoded.session);
+export async function deleteSessionHandler(req: Request, res: Response) {
+  try {
+    const sessionId = res.locals.user.session;
 
-  if (!session || !session.valid) {
-    return res.status(401).send(message);
+    await updateSession({ _id: sessionId }, { valid: false });
+
+    return res.send({
+      accessToken: null,
+      refreshToken: null
+    });
+  } catch (e) {
+    logger.error(e);
+    return res.status(500).send(e);
   }
-
-  const user = await findUserById(String(session.user));
-
-  if (!user) {
-    return res.status(401).send(message);
-  }
-
-  const accessToken = signAccessToken(user);
-
-  return res.send({ accessToken });
 }

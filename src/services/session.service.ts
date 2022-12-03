@@ -1,40 +1,52 @@
 import config from "config";
-import { sign } from "crypto";
-import SessionModel from "../model/session.model";
-import { signJwt } from "../utils/jwt";
-import { UserDocument, UserPrivateFields } from "../model/user.model";
+import { get } from "lodash";
+import SessionModel, { SessionDocument } from "../model/session.model";
+import { signJwt, verifyJwt } from "../utils/jwt";
+import { UserPrivateFields } from "../model/user.model";
 import { omit } from "lodash";
+import { FilterQuery, UpdateQuery } from "mongoose";
+import { findUser } from "./user.service";
 
-export async function createSession({ userId }: { userId: string }) {
-  return SessionModel.create({ user: userId });
+export async function createSession(userId: string, userAgent: string) {
+  return SessionModel.create({ user: userId, userAgent });
 }
 
-export async function findSessionById(id: string) {
-  return SessionModel.findById(id);
+export async function findSessions(query: FilterQuery<SessionDocument>) {
+  return SessionModel.find(query).lean();
 }
 
-export async function signRefreshToken({ userId }: { userId: string }) {
-  const session = await createSession({ userId });
+export async function removeSession(query: FilterQuery<SessionDocument>) {
+  return SessionModel.findOneAndRemove(query);
+}
 
-  const refreshToken = signJwt(
-    {
-      session: session._id
-    },
-    "refreshTokenPrivateKey",
-    {
-      expiresIn: config.get("refreshTokenTtl")
-    }
+export async function updateSession(
+  query: FilterQuery<SessionDocument>,
+  update: UpdateQuery<SessionDocument>
+) {
+  return SessionModel.updateOne(query, update);
+}
+
+export async function reIssueAccessToken({
+  refreshToken
+}: {
+  refreshToken: string;
+}) {
+  const { decoded } = verifyJwt(refreshToken);
+
+  if (!decoded || !get(decoded, "session")) return false;
+
+  const session = await SessionModel.findById(get(decoded, "session"));
+
+  if (!session || !session.valid) return false;
+
+  const user = await findUser({ _id: session.user });
+
+  if (!user) return false;
+
+  const accessToken = signJwt(
+    { ...user, session: session._id },
+    { expiresIn: config.get("accessTokenTtl") } // 15 minutes
   );
-
-  return refreshToken;
-}
-
-export function signAccessToken(user: any) {
-  const payload = omit(user.toJSON(), UserPrivateFields);
-
-  const accessToken = signJwt(payload, "accessTokenPrivateKey", {
-    expiresIn: config.get("accessTokenTtl")
-  });
 
   return accessToken;
 }
