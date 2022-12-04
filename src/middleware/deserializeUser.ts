@@ -15,18 +15,20 @@ const deserializeUser = async (
   const refreshToken =
     get(req, "cookies.refreshToken") || get(req, "headers.x-refresh");
 
-  if (!accessToken) {
+  if (!accessToken && !refreshToken) {
     return next();
   }
 
-  const { decoded, expired } = verifyJwt(accessToken);
+  if (accessToken) {
+    const { decoded } = verifyJwt(accessToken, "accessTokenPublicKey");
 
-  if (decoded) {
-    res.locals.user = decoded;
-    return next();
+    if (decoded) {
+      res.locals.user = decoded;
+      return next();
+    }
   }
 
-  if (expired && refreshToken) {
+  if (refreshToken) {
     const newAccessToken = await reIssueAccessToken({ refreshToken });
 
     if (newAccessToken) {
@@ -42,7 +44,7 @@ const deserializeUser = async (
       });
     }
 
-    const result = verifyJwt(newAccessToken as string);
+    const result = verifyJwt(newAccessToken as string, "accessTokenPublicKey");
 
     res.locals.user = result.decoded;
     return next();

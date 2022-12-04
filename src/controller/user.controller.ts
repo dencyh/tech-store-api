@@ -17,6 +17,7 @@ import { sendVerificationEmail, forgotPasswordEmail } from "../utils/mailer";
 import * as bcrypt from "bcrypt";
 import { createCart } from "../services/cart.service";
 import { createBookmark } from "../services/bookmark.service";
+import { omit } from "lodash";
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -149,5 +150,5 @@ export async function getUsers(req: Request, res: Response) {
 }
 
 export async function getCurrentUserHandler(req: Request, res: Response) {
-  return res.send(res.locals.user);
+  return res.send(omit(res.locals.user, "password"));
 }
