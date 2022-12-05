@@ -12,22 +12,22 @@ export function getCart(userId: string) {
 
 export function getCartWithProducts(userId: string) {
   return CartModel.findOne({ userId }).populate({
-    path: "productsInCart.productId",
+    path: "products.product",
     model: "Product"
   });
 }
 
 export function updateCart({
   userId,
-  productsInCart
+  products
 }: {
   userId: string;
-  productsInCart: UpdateCartInput["productsInCart"];
+  products: UpdateCartInput["products"];
 }) {
   return CartModel.findOneAndUpdate(
     { userId },
     {
-      $set: { productsInCart: [...productsInCart] }
+      $set: { productsInCart: [...products] }
     }
   );
 }

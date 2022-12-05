@@ -1,3 +1,4 @@
+import { BookmarkDocument } from "./../model/bookmark.model";
 import {
   BookmarkParamsInput,
   UpdateBookmarkInput
@@ -5,11 +6,7 @@ import {
 import { Request, Response } from "express";
 
 import logger from "../utils/logger";
-import {
-  getBookmark,
-  getBookmarkWithProducts,
-  updateBookmark
-} from "../services/bookmark.service";
+import { getBookmarks, updateBookmark } from "../services/bookmark.service";
 
 export async function updateBookmarkHandler(
   req: Request<BookmarkParamsInput, {}, UpdateBookmarkInput>,
@@ -35,25 +32,14 @@ export async function getBookmarkHandler(
   try {
     const { userId } = req.params;
 
-    const bookmark = await getBookmark(userId);
+    let products = [] as BookmarkDocument["products"];
+    const bookmark = await getBookmarks(userId);
+    if (bookmark?.products) {
+      products = bookmark.products;
+    }
 
-    res.json(bookmark);
+    res.json(products);
   } catch (e: any) {
-    logger.error(e);
-    return res.status(500).send(e);
-  }
-}
-
-export async function getBookmarkProductsHandler(
-  req: Request<BookmarkParamsInput, {}>,
-  res: Response
-) {
-  try {
-    const { userId } = req.params;
-    const cart = await getBookmarkWithProducts(userId);
-
-    res.json(cart);
-  } catch (e) {
     logger.error(e);
     return res.status(500).send(e);
   }

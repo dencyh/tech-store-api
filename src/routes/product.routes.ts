@@ -1,6 +1,8 @@
+import { requireUser } from "./../middleware/requireUser";
 import {
   addProductImagesSchema,
   findManyProductsSchema,
+  findProductsByIdsSchema,
   findProductSchema
 } from "./../schema/products/core.product.schema";
 import { Router } from "express";
@@ -10,7 +12,8 @@ import {
   createProductHandler,
   addProductImagesHandler,
   findAllProductsHandler,
-  findOneProductHandler
+  findOneProductHandler,
+  findManyProductsByIdsHandler
 } from "../controller/product.controller";
 import validateResource from "../middleware/validateResourse";
 import { validateProduct } from "../middleware/validateProduct";
@@ -25,7 +28,7 @@ productRouter.patch(
   "/:id",
   bufferImages,
   resizeImage("product"),
-  validateResource(addProductImagesSchema),
+  [requireUser, validateResource(addProductImagesSchema)],
   addProductImagesHandler
 );
 
@@ -40,4 +43,8 @@ productRouter.get(
   findOneProductHandler
 );
 
-productRouter.get("/:category", validateResource(findProductSchema));
+productRouter.post(
+  "/cart",
+  validateResource(findProductsByIdsSchema),
+  findManyProductsByIdsHandler
+);

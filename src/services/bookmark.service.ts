@@ -6,11 +6,7 @@ export function createBookmark(userId: string) {
   return BookmarkModel.create({ userId, bookmarks: [] });
 }
 
-export function getBookmark(userId: string) {
-  return BookmarkModel.findOne({ userId });
-}
-
-export function getBookmarkWithProducts(userId: string) {
+export function getBookmarks(userId: string) {
   return BookmarkModel.findOne({ userId }).populate({
     path: "products",
     model: "Product"

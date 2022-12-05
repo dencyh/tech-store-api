@@ -4,9 +4,9 @@ import mongoose from "mongoose";
 
 export interface CartDocument extends mongoose.Document {
   userId: UserDocument["_id"];
-  productsInCart: {
+  products: {
     quantity: number;
-    productId: ProductDocument["_id"];
+    product: ProductDocument["_id"];
   }[];
   createdAt: Date;
   updatedAt: Date;
@@ -19,9 +19,9 @@ const cartSchema = new mongoose.Schema(
       required: true,
       ref: "User"
     },
-    productsInCart: [
+    products: [
       {
-        productId: {
+        product: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
           ref: "Product"

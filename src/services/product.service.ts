@@ -22,3 +22,7 @@ export function findProductsWithParams(params: FindManyProductInput) {
 export function findProductById(id: string) {
   return ProductModel.findById(id);
 }
+
+export function findManyProductsByIds(ids: string[]) {
+  return ProductModel.find({ _id: { $in: ids } });
+}

@@ -6,7 +6,7 @@ import {
 import { Router } from "express";
 import {
   getCartHandler,
-  getCartProductsHandler,
+  // getCartProductsHandler,
   updateCartHandler
 } from "../controller/cart.controller";
 import validateResource from "../middleware/validateResourse";
@@ -16,13 +16,17 @@ export const cartRouter = Router();
 
 cartRouter.put(
   "/:userId",
-  validateResource(updateCartSchema),
+  [requireUser, validateResource(updateCartSchema)],
   updateCartHandler
 );
 
-cartRouter.get("/:userId", validateResource(cartParamsSchema), getCartHandler);
-cartRouter.post(
+cartRouter.get(
   "/:userId",
-  validateResource(cartParamsSchema),
-  getCartProductsHandler
+  [requireUser, validateResource(cartParamsSchema)],
+  getCartHandler
 );
+// cartRouter.post(
+//   "/:userId",
+//   [requireUser, validateResource(cartParamsSchema)],
+//   getCartProductsHandler
+// );

@@ -1,3 +1,4 @@
+import { requireUser } from "./../middleware/requireUser";
 import { createCategorySchema } from "./../schema/category.schema";
 import { Router } from "express";
 import {
@@ -12,7 +13,7 @@ export const categoryRouter = Router();
 categoryRouter.post(
   "/",
   uploadImage("category/").single("image"),
-  validateResource(createCategorySchema),
+  [requireUser, validateResource(createCategorySchema)],
   createCategoryHandler
 );
 

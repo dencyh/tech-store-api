@@ -1,3 +1,4 @@
+import { requireUser } from "./../middleware/requireUser";
 import {
   bookmarkParamsSchema,
   updateBookmarkSchema
@@ -6,7 +7,7 @@ import {
 import { Router } from "express";
 import validateResource from "../middleware/validateResourse";
 import {
-  getBookmarkProductsHandler,
+  getBookmarkHandler,
   updateBookmarkHandler
 } from "../controller/bookmark.controller";
 
@@ -14,12 +15,12 @@ export const bookmarkRouter = Router();
 
 bookmarkRouter.put(
   "/:userId",
-  validateResource(updateBookmarkSchema),
+  [requireUser, validateResource(updateBookmarkSchema)],
   updateBookmarkHandler
 );
 
 bookmarkRouter.get(
   "/:userId",
-  validateResource(bookmarkParamsSchema),
-  getBookmarkProductsHandler
+  [requireUser, validateResource(bookmarkParamsSchema)],
+  getBookmarkHandler
 );

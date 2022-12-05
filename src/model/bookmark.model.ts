@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 export interface BookmarkDocument extends mongoose.Document {
   userId: UserDocument["_id"];
-  bookmarks: ProductDocument["_id"][];
+  products: ProductDocument["_id"][];
   createdAt: Date;
   updatedAt: Date;
 }

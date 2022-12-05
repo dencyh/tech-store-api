@@ -1,3 +1,5 @@
+import { CartDocument } from "./../model/cart.model";
+import { ProductDocument } from "./../model/product.model";
 import {
   CartParamsInput,
   GetCartProductsInput,
@@ -18,9 +20,9 @@ export async function updateCartHandler(
 ) {
   try {
     const { userId } = req.params;
-    const { productsInCart } = req.body;
+    const { products } = req.body;
 
-    const updated = await updateCart({ userId, productsInCart });
+    const updated = await updateCart({ userId, products });
 
     res.json(updated);
   } catch (e: any) {
@@ -29,31 +31,38 @@ export async function updateCartHandler(
   }
 }
 
+// export async function getCartHandler(
+//   req: Request<CartParamsInput>,
+//   res: Response
+// ) {
+//   try {
+//     const { userId } = req.params;
+
+//     const cart = await getCart(userId);
+
+//     res.json(cart);
+//   } catch (e: any) {
+//     logger.error(e);
+//     return res.status(500).send(e);
+//   }
+// }
+
 export async function getCartHandler(
-  req: Request<CartParamsInput>,
-  res: Response
-) {
-  try {
-    const { userId } = req.params;
-
-    const cart = await getCart(userId);
-
-    res.json(cart);
-  } catch (e: any) {
-    logger.error(e);
-    return res.status(500).send(e);
-  }
-}
-
-export async function getCartProductsHandler(
   req: Request<CartParamsInput, {}>,
   res: Response
 ) {
   try {
     const { userId } = req.params;
+
     const cart = await getCartWithProducts(userId);
 
-    res.json(cart);
+    let products = [] as CartDocument["products"];
+
+    if (cart?.products) {
+      products = cart.products;
+    }
+
+    res.json(products);
   } catch (e) {
     logger.error(e);
     return res.status(500).send(e);

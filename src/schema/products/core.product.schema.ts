@@ -65,3 +65,11 @@ export const findManyProductsSchema = z.object({
 export type FindManyProductInput = z.infer<
   typeof findManyProductsSchema
 >["query"];
+
+export const findProductsByIdsSchema = z.object({
+  body: z.array(z.string())
+});
+
+export type FindProductsByIdsInput = z.infer<
+  typeof findProductsByIdsSchema
+>["body"];

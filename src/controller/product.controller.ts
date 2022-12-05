@@ -9,7 +9,8 @@ import {
   createProduct,
   findProductsWithParams,
   findProductById,
-  addProductImages
+  addProductImages,
+  findManyProductsByIds
 } from "../services/product.service";
 import _ from "lodash";
 import { findBrandByName } from "../services/brand.service";
@@ -88,6 +89,22 @@ export async function findOneProductHandler(
     const { id } = req.params;
     const product = await findProductById(id);
     return res.json(product);
+  } catch (e) {
+    logger.error(e);
+    return res.status(500).send(e);
+  }
+}
+
+export async function findManyProductsByIdsHandler(
+  req: Request<{}, {}, string[]>,
+  res: Response
+) {
+  try {
+    const ids = req.body;
+    console.log(ids);
+    const products = await findManyProductsByIds(ids);
+
+    return res.json(products);
   } catch (e) {
     logger.error(e);
     return res.status(500).send(e);
