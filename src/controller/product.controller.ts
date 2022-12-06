@@ -48,13 +48,14 @@ export async function addProductImagesHandler(
 ) {
   try {
     const { id } = req.params;
-    const images = req.files as [];
+    const images = req.body.images as string[];
+    console.log(images);
 
     if (!images) {
       return res.status(400).send("At least one image is required");
     }
 
-    const imagePaths = images.map((img: any) => img.path);
+    const imagePaths = images.map((img) => "static/products/" + img);
 
     const updated = await addProductImages(id, imagePaths);
 

@@ -27,7 +27,7 @@ export function resizeImage(dest: string) {
           .toFormat("png")
           .toFile(`static/${dest}/${newFilename}.png`);
 
-        req.body.images.push(newFilename);
+        req.body.images.push(filename);
       })
     );
 

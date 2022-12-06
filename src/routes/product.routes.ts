@@ -26,9 +26,13 @@ productRouter.post("/", validateProduct, createProductHandler);
 
 productRouter.patch(
   "/:id",
-  bufferImages,
-  resizeImage("product"),
-  [requireUser, validateResource(addProductImagesSchema)],
+
+  [
+    requireUser,
+    bufferImages,
+    resizeImage("product"),
+    validateResource(addProductImagesSchema)
+  ],
   addProductImagesHandler
 );
 

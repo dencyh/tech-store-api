@@ -27,7 +27,7 @@ export function updateCart({
   return CartModel.findOneAndUpdate(
     { userId },
     {
-      $set: { productsInCart: [...products] }
+      $set: { products: [...products] }
     }
   );
 }

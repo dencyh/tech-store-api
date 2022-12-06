@@ -31,22 +31,6 @@ export async function updateCartHandler(
   }
 }
 
-// export async function getCartHandler(
-//   req: Request<CartParamsInput>,
-//   res: Response
-// ) {
-//   try {
-//     const { userId } = req.params;
-
-//     const cart = await getCart(userId);
-
-//     res.json(cart);
-//   } catch (e: any) {
-//     logger.error(e);
-//     return res.status(500).send(e);
-//   }
-// }
-
 export async function getCartHandler(
   req: Request<CartParamsInput, {}>,
   res: Response

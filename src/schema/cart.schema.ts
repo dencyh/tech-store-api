@@ -18,7 +18,7 @@ export const updateCartSchema = object({
   body: object({
     products: array(
       object({
-        products: string({ required_error: "Product ID is required" }),
+        product: string({ required_error: "Product ID is required" }),
         quantity: number({
           required_error: "Specify the quantity of the product"
         })
