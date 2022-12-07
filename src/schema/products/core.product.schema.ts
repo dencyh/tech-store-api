@@ -58,7 +58,7 @@ export type FindProductInput = z.infer<typeof findProductSchema>["params"];
 
 export const findManyProductsSchema = z.object({
   query: z.object({
-    type: z.string().optional()
+    type: z.string()
   })
 });
 

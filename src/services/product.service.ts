@@ -14,8 +14,18 @@ export function addProductImages(id: string, imgArr: string[]) {
   );
 }
 
-export function findProductsWithParams(params: FindManyProductInput) {
-  return ProductModel.find({ ...params }).limit(50);
+interface ProductQuery {
+  [key: string]: string;
+  type: string;
+}
+
+export function findProductsWithParams(params: ProductQuery) {
+  const { type, ...rest } = params;
+  const queries = Object.entries(rest).reduce(
+    (acc, [key, value]) => ({ ...acc, [key]: new RegExp(value, "gi") }),
+    {}
+  );
+  return ProductModel.find({ type, ...queries }).limit(50);
   // .sort({ price: "desc" })
 }
 
