@@ -16,10 +16,10 @@ export function addProductImages(id: string, imgArr: string[]) {
 
 interface ProductQuery {
   [key: string]: string;
-  type: string;
 }
 
 export function findProductsWithParams(params: ProductQuery) {
+  if (Object.keys(params).length < 1) return ProductModel.find().limit(50);
   const { type, ...rest } = params;
   const queries = Object.entries(rest).reduce(
     (acc, [key, value]) => ({ ...acc, [key]: new RegExp(value, "gi") }),

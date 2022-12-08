@@ -5,7 +5,7 @@ import {
   verifyUserSchema
 } from "./../schema/user.schema";
 import { Router } from "express";
-import validateResource from "../middleware/validateResourse";
+import validateResource from "../middleware/validateResource";
 import {
   createUserHandler,
   forgotPasswordHandler,

@@ -2,10 +2,8 @@ import { string } from "zod";
 import mongoose from "mongoose";
 import { UserDocument } from "./user.model";
 import { CategoryDocument } from "./category.model";
-import { TypeDocument } from "./type.model";
 import {
   CreateProductInput,
-  ProductColor,
   productTypeSchemas
 } from "../schema/products/core.product.schema";
 import { BrandDocument } from "./brand.model";
@@ -16,11 +14,11 @@ export interface ProductDocument extends mongoose.Document {
   price: number;
   category: CategoryDocument["_id"];
   brand: BrandDocument["_id"];
-  color: ProductColor;
+  color: string;
   releaseDate: number;
   description: string;
   imagePaths?: string[];
-  spec: Partial<CreateProductInput>;
+  specs: CreateProductInput["specs"];
   createdAt: Date;
   updatedAt: Date;
 }

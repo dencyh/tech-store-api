@@ -1,13 +1,18 @@
 import { requireUser } from "./../middleware/requireUser";
 import { createBrandSchema } from "./../schema/brand.schema";
 import { Router } from "express";
-import { createBrandHandler } from "../controller/brand.controller";
-import validateResource from "../middleware/validateResourse";
+import {
+  createBrandHandler,
+  findBrandsByTypeHandler
+} from "../controller/brand.controller";
+import validateResource from "../middleware/validateResource";
 
 export const brandRouter = Router();
 
 brandRouter.post(
   "/",
-  [requireUser, validateResource(createBrandSchema)],
+  [/* requireUser,  */ validateResource(createBrandSchema)],
   createBrandHandler
 );
+
+brandRouter.get("/:type", findBrandsByTypeHandler);

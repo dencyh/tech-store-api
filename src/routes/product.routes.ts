@@ -15,7 +15,7 @@ import {
   findOneProductHandler,
   findManyProductsByIdsHandler
 } from "../controller/product.controller";
-import validateResource from "../middleware/validateResourse";
+import validateResource from "../middleware/validateResource";
 import { validateProduct } from "../middleware/validateProduct";
 import { resizeImage } from "../middleware/resizeImage";
 import { bufferImages } from "../middleware/bufferImage";
@@ -38,7 +38,7 @@ productRouter.patch(
 
 productRouter.get(
   "/",
-  validateResource(findManyProductsSchema),
+  // validateResource(findManyProductsSchema),
   findAllProductsHandler
 );
 productRouter.get(

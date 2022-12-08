@@ -6,7 +6,7 @@ import {
   getCategoriesHandler
 } from "../controller/category.controller";
 import { uploadImage } from "../middleware/uploadImage";
-import validateResource from "../middleware/validateResourse";
+import validateResource from "../middleware/validateResource";
 
 export const categoryRouter = Router();
 

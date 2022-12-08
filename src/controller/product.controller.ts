@@ -22,18 +22,19 @@ export async function createProductHandler(
   res: Response
 ) {
   try {
-    const body = req.body;
+    const { brand, type, ...productInput } = req.body;
 
-    const { brandName, type } = req.body;
-
-    const brand = await findBrandByName(brandName.toLowerCase());
-    if (!brand) return res.status(400).send("Brand does not exists");
+    const brandObj = await findBrandByName(brand.toLowerCase());
+    if (!brandObj) return res.status(400).send("Brand does not exists");
     const category = await findCategoryByType(type.toLowerCase());
     if (!category) return res.status(400).send("Category does not exists");
 
-    const productInput = _.omit(body, "brand");
-
-    const product = await createProduct({ ...productInput, brand, category });
+    const product = await createProduct({
+      ...productInput,
+      type,
+      category,
+      brand: brandObj
+    });
 
     return res.json(product);
   } catch (e: any) {

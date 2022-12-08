@@ -8,3 +8,7 @@ export function createBrand(input: Partial<BrandDocument>) {
 export function findBrandByName(name: string) {
   return BrandModel.findOne({ name });
 }
+
+export function findBrandsByType(type: string) {
+  return BrandModel.find({ types: type });
+}

@@ -9,24 +9,20 @@ import {
   // getCartProductsHandler,
   updateCartHandler
 } from "../controller/cart.controller";
-import validateResource from "../middleware/validateResourse";
+import validateResource from "../middleware/validateResource";
 import { updateCartSchema } from "../schema/cart.schema";
+import { requireOwner } from "../middleware/requiredOwner";
 
 export const cartRouter = Router();
 
 cartRouter.put(
   "/:userId",
-  [requireUser, validateResource(updateCartSchema)],
+  [requireUser, requireOwner, validateResource(updateCartSchema)],
   updateCartHandler
 );
 
 cartRouter.get(
   "/:userId",
-  [requireUser, validateResource(cartParamsSchema)],
+  [requireUser, requireOwner, validateResource(cartParamsSchema)],
   getCartHandler
 );
-// cartRouter.post(
-//   "/:userId",
-//   [requireUser, validateResource(cartParamsSchema)],
-//   getCartProductsHandler
-// );

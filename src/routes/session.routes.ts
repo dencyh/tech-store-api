@@ -1,6 +1,6 @@
 import { createSessionSchema } from "../schema/session.schema";
 import { Router } from "express";
-import validateResource from "../middleware/validateResourse";
+import validateResource from "../middleware/validateResource";
 import {
   createUserSessionHandler,
   deleteSessionHandler,
@@ -16,7 +16,6 @@ authRouter.post(
   createUserSessionHandler
 );
 
-// authRouter.post("/refresh", refreshAccessTokenHandler);
 
 authRouter.get("/", requireUser, getUserSessionsHandler);
 

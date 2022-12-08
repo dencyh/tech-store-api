@@ -6,6 +6,7 @@ import { productRouter } from "./product.routes";
 import { authRouter } from "./session.routes";
 import { userRouter } from "./user.routes";
 import { bookmarkRouter } from "./bookmark.routes";
+import { specsRouter } from "./specs.routes";
 
 const rootRouter = Router();
 
@@ -18,5 +19,6 @@ rootRouter.use("/products", productRouter);
 rootRouter.use("/brands", brandRouter);
 rootRouter.use("/cart", cartRouter);
 rootRouter.use("/bookmarks", bookmarkRouter);
+rootRouter.use("/specs", specsRouter);
 
 export default rootRouter;
