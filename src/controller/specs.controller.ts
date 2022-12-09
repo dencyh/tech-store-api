@@ -8,6 +8,18 @@ interface Unique<T> {
   [key: string]: T[];
 }
 
+export const selectProductOptions = {
+  _id: 0,
+  __v: 0,
+  createdAt: 0,
+  updatedAt: 0,
+  imagePaths: 0,
+  description: 0,
+  type: 0,
+  category: 0,
+  brand: 0
+};
+
 export async function createSpecsHandler(
   req: Request<{}, {}, { type: string }>,
   res: Response
@@ -17,19 +29,8 @@ export async function createSpecsHandler(
 
     const allProductsByType = await ProductModel.find(
       { type },
-      {
-        _id: 0,
-        __v: 0,
-        createdAt: 0,
-        updatedAt: 0,
-        imagePaths: 0,
-        description: 0,
-        type: 0,
-        category: 0
-      }
-    )
-      .populate("brand")
-      .lean();
+      selectProductOptions
+    ).lean();
 
     const productKeys = Object.keys(allProductsByType[0]);
     const specsKeys = Object.keys(allProductsByType[0].specs);
@@ -84,6 +85,17 @@ export async function createSpecsHandler(
 
     return res.json(specsForType);
   } catch (e: any) {
+    logger.error(e);
+    return res.status(500).send(e);
+  }
+}
+
+export async function updateSpecsHandler(
+  req: Request<{}, {}, { type: string }>,
+  res: Response
+) {
+  try {
+  } catch (e) {
     logger.error(e);
     return res.status(500).send(e);
   }

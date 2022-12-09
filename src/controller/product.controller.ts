@@ -16,6 +16,7 @@ import _ from "lodash";
 import { findBrandByName } from "../services/brand.service";
 import { findCategoryByType } from "../services/category.service";
 import logger from "../utils/logger";
+import { updateSpecs } from "../services/specs.service";
 
 export async function createProductHandler(
   req: Request<{}, {}, CreateProductInput>,
@@ -35,6 +36,9 @@ export async function createProductHandler(
       category,
       brand: brandObj
     });
+
+    // Update specs for type
+    await updateSpecs(product._id, type);
 
     return res.json(product);
   } catch (e: any) {

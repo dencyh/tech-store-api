@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import { CreateProductInput } from "../schema/products/core.product.schema";
 
-export type BaseSpecs = Omit<CreateProductInput, "description" | "imagePaths">;
+export type BaseSpecs = Omit<
+  CreateProductInput,
+  "description" | "imagePaths" | "brand" | "category"
+>;
 
 export type SpecsVariety<T, S> = {
   [key in keyof T]: T[key] extends S
@@ -21,7 +24,6 @@ export interface SpecsDocument extends mongoose.Document {
 const specsForTypeSchema = new mongoose.Schema({
   name: [{ type: String, required: true }],
   price: [{ type: Number, required: true }],
-  brand: [{ type: String, required: true }],
   color: [{ type: String, required: true }],
   releaseDate: [{ type: Number, required: true }],
   specs: { type: Object }
