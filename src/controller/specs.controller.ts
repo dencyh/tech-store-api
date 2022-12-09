@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import logger from "../utils/logger";
 import ProductModel from "../model/product.model";
-import { createSpecs } from "../services/specs.service";
+import { createSpecs, getSpecs, removeSpecs } from "../services/specs.service";
 import { omit } from "lodash";
 
 interface Unique<T> {
@@ -20,7 +20,7 @@ export const selectProductOptions = {
   brand: 0
 };
 
-export async function createSpecsHandler(
+export async function setSpecsHandler(
   req: Request<{}, {}, { type: string }>,
   res: Response
 ) {
@@ -42,13 +42,17 @@ export async function createSpecsHandler(
     productKeys.forEach((key) => {
       if (key === "specs") {
         const dictionary: { [key: string]: boolean } = {};
-        const unique: Unique<string | number | [number, number]> = {};
+        const unique: Unique<any> = {};
 
         specsKeys.forEach((specKey) => {
           allProductsByType.forEach((product) => {
             const value =
               product["specs"][specKey as keyof typeof product.specs];
 
+            if (!value)
+              throw new Error(
+                `Key: ${specKey} doesn't exist on product: ${product.name}`
+              );
             if (dictionary[value.toString()]) return;
 
             if (unique[specKey]) {
@@ -95,6 +99,22 @@ export async function updateSpecsHandler(
   res: Response
 ) {
   try {
+  } catch (e) {
+    logger.error(e);
+    return res.status(500).send(e);
+  }
+}
+
+export async function getSpecsByTypeHandler(
+  req: Request<{ type: string }>,
+  res: Response
+) {
+  try {
+    const { type } = req.params;
+
+    const specs = await getSpecs(type);
+
+    return res.send(specs?.specs);
   } catch (e) {
     logger.error(e);
     return res.status(500).send(e);

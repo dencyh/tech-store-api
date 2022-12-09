@@ -1,4 +1,4 @@
-import { literal, number, object, string, tuple, TypeOf } from "zod";
+import { literal, number, object, string, tuple, TypeOf, union } from "zod";
 import { createProductSchema } from "./core.product.schema";
 
 export const createLaptopSchema = object({
@@ -17,7 +17,8 @@ export const createLaptopSchema = object({
       gpu: string({ required_error: "GPU name is required" }),
       ram: number({ required_error: "RAM value is required" }),
       capacity: number({ required_error: "Capacity is required" }),
-      batteryLife: number({ required_error: "Battery life is required" })
+      batteryLife: number({ required_error: "Battery life is required" }),
+      biometrics: union([literal("faceId"), literal("touchId")]).array()
     })
   })
 });

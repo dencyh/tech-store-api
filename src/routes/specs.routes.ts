@@ -1,6 +1,10 @@
 import { Router } from "express";
-import { createSpecsHandler } from "../controller/specs.controller";
+import {
+  setSpecsHandler,
+  getSpecsByTypeHandler
+} from "../controller/specs.controller";
 
 export const specsRouter = Router();
 
-specsRouter.post("/", createSpecsHandler);
+specsRouter.post("/", setSpecsHandler);
+specsRouter.get("/:type", getSpecsByTypeHandler);

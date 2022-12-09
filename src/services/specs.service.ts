@@ -5,9 +5,14 @@ import { LeanDocument } from "mongoose";
 import { CreateProductInput } from "../schema/products/core.product.schema";
 import { selectProductOptions } from "../controller/specs.controller";
 
-export function createSpecs(input: Partial<SpecsDocument>) {
+export async function createSpecs(input: Partial<SpecsDocument>) {
+  if (!input.type) return;
+  const type = input.type;
+  await SpecsModel.findOneAndRemove({ type });
   return SpecsModel.create(input);
 }
+
+export function removeSpecs(type: string) {}
 
 export async function updateSpecs(productId: string, type: string) {
   const product = await ProductModel.findById(
@@ -42,4 +47,8 @@ export async function updateSpecs(productId: string, type: string) {
       ...update
     }
   );
+}
+
+export function getSpecs(type: string) {
+  return SpecsModel.findOne({ type });
 }

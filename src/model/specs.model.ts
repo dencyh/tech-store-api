@@ -3,7 +3,7 @@ import { CreateProductInput } from "../schema/products/core.product.schema";
 
 export type BaseSpecs = Omit<
   CreateProductInput,
-  "description" | "imagePaths" | "brand" | "category"
+  "description" | "imagePaths" | "brand" | "category" | "type"
 >;
 
 export type SpecsVariety<T, S> = {

@@ -10,7 +10,7 @@ export const requireOwner = (
   const { userId: requestedId } = req.params;
   if (requestedId) {
     const owner = actualId === requestedId;
-    console.log("owner:", actualId, "===", "requested:", requestedId);
+    // console.log("owner:", actualId, "===", "requested:", requestedId);
 
     if (!owner) {
       return res.sendStatus(403);
