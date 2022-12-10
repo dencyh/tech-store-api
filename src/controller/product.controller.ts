@@ -107,7 +107,6 @@ export async function findManyProductsByIdsHandler(
 ) {
   try {
     const ids = req.body;
-    console.log(ids);
     const products = await findManyProductsByIds(ids);
 
     return res.json(products);

@@ -22,11 +22,12 @@ export function findProductsWithParams(params: ProductQuery) {
   if (Object.keys(params).length < 1) return ProductModel.find().limit(50);
   const { type, ...rest } = params;
   const queries = Object.entries(rest).reduce(
-    (acc, [key, value]) => ({ ...acc, [key]: new RegExp(value, "gi") }),
+    (acc, [key, value]) => ({ ...acc, [key]: { $in: value.split(",") } }),
     {}
   );
-  return ProductModel.find({ type, ...queries }).limit(50);
-  // .sort({ price: "desc" })
+
+  const filter = type ? { type, ...queries } : { ...queries };
+  return ProductModel.find(filter).limit(50);
 }
 
 export function findProductById(id: string) {
