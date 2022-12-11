@@ -21,11 +21,11 @@ export const selectProductOptions = {
 };
 
 export async function setSpecsHandler(
-  req: Request<{}, {}, { type: string }>,
+  req: Request<{ type: string }>,
   res: Response
 ) {
   try {
-    const { type } = req.body;
+    const { type } = req.params;
 
     const allProductsByType = await ProductModel.find(
       { type },
@@ -49,18 +49,20 @@ export async function setSpecsHandler(
             const value =
               product["specs"][specKey as keyof typeof product.specs];
 
+            const dictionaryKey = specKey + "." + value.toString();
+
             if (!value)
               throw new Error(
                 `Key: ${specKey} doesn't exist on product: ${product.name}`
               );
-            if (dictionary[value.toString()]) return;
+            if (dictionary[dictionaryKey]) return;
 
             if (unique[specKey]) {
               unique[specKey].push(value);
             } else {
               unique[specKey] = [value];
             }
-            dictionary[value.toString()] = true;
+            dictionary[dictionaryKey] = true;
           });
         });
 
@@ -72,15 +74,16 @@ export async function setSpecsHandler(
             key === "brand"
               ? product[key as keyof typeof product].name
               : product[key as keyof typeof product];
+          const dictionaryKey = key + "." + value.toString();
 
-          if (dictionary[value.toString()]) return;
+          if (dictionary[dictionaryKey]) return;
 
           if (specs[key]) {
             specs[key].push(value);
           } else {
             specs[key] = [value];
           }
-          dictionary[value.toString()] = true;
+          dictionary[dictionaryKey] = true;
         });
       }
     });

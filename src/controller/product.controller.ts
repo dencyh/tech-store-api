@@ -38,7 +38,7 @@ export async function createProductHandler(
     });
 
     // Update specs for type
-    await updateSpecs(product._id, type);
+    // await updateSpecs(product._id, type);
 
     return res.json(product);
   } catch (e: any) {

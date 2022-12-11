@@ -1,5 +1,5 @@
 import ProductModel, { ProductDocument } from "../model/product.model";
-import { FindManyProductInput } from "../schema/products/core.product.schema";
+import logger from "../utils/logger";
 
 export function createProduct(input: Partial<ProductDocument>) {
   return ProductModel.create(input);
@@ -19,37 +19,41 @@ interface ProductQuery {
 }
 
 export function findProductsWithParams(params: ProductQuery) {
-  if (Object.keys(params).length < 1) return ProductModel.find().limit(50);
-  const { type, search, ...rest } = params;
+  try {
+    if (Object.keys(params).length < 1) return ProductModel.find().limit(50);
 
-  const queries = Object.entries(rest).reduce((acc, [key, value]) => {
-    const notNum = /[А-Яа-яA-Za-z]+/g.test(value) || isNaN(Number(value));
+    let { type, search, ...rest } = params;
+    let searchRegExp;
 
-    if (key === "price") {
-      const range = value.split(",").map((price) => Number(price));
-      return { ...acc, [key]: { $gte: range[0], $lte: range[1] } };
-    }
+    type = type && JSON.parse(type);
+    search = search && JSON.parse(search);
+    searchRegExp = search ? new RegExp(search, "gi") : undefined;
 
-    if (notNum) {
+    const queries = Object.entries(rest).reduce((acc, [key, raw]) => {
+      const value = JSON.parse(raw);
+
+      if (key === "price") {
+        return { ...acc, [key]: { $gte: value[0], $lte: value[1] } };
+      }
+
       return {
         ...acc,
-        [key]: { $in: value.split(",") }
+        [key]: { $in: value }
       };
-    } else {
-      return {
-        ...acc,
-        [key]: {
-          $in: value.split(",").map((value) => Number(value))
-        }
-      };
-    }
-  }, {});
+    }, {} as any);
 
-  const filter = type ? { type, ...queries } : { ...queries };
+    const filter = {
+      ...(type && { type }),
+      ...queries,
+      ...(search && { name: searchRegExp })
+    };
 
-  console.log(filter);
+    console.log(filter);
 
-  return ProductModel.find(filter).limit(50);
+    return ProductModel.find(filter).limit(50);
+  } catch (e) {
+    logger.error(e);
+  }
 }
 
 export function findProductById(id: string) {

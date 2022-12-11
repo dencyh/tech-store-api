@@ -6,5 +6,5 @@ import {
 
 export const specsRouter = Router();
 
-specsRouter.post("/", setSpecsHandler);
+specsRouter.post("/:type", setSpecsHandler);
 specsRouter.get("/:type", getSpecsByTypeHandler);
