@@ -8,14 +8,14 @@ const deserializeUser = async (
   res: Response,
   next: NextFunction
 ) => {
+  const refreshToken =
+    get(req, "cookies.refreshToken") || get(req, "headers.x-refresh");
+
   const accessToken =
     get(req, "cookies.accessToken") ||
     get(req, "headers.authorization", "").replace(/^Bearer\s/, "");
 
-  const refreshToken =
-    get(req, "cookies.refreshToken") || get(req, "headers.x-refresh");
-
-  if (!accessToken && !refreshToken) {
+  if (!refreshToken && !accessToken) {
     return next();
   }
 
