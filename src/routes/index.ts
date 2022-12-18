@@ -1,3 +1,4 @@
+import { reviewRouter } from "./review.routes";
 import { cartRouter } from "./cart.routes";
 import { Router } from "express";
 import { brandRouter } from "./brand.routes";
@@ -20,5 +21,6 @@ rootRouter.use("/brands", brandRouter);
 rootRouter.use("/cart", cartRouter);
 rootRouter.use("/bookmarks", bookmarkRouter);
 rootRouter.use("/specs", specsRouter);
+rootRouter.use("/reviews", reviewRouter);
 
 export default rootRouter;

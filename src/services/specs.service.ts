@@ -1,7 +1,6 @@
 import ProductModel, { ProductDocument } from "./../model/product.model";
 import { SpecsDocument } from "./../model/specs.model";
 import SpecsModel from "../model/specs.model";
-import { LeanDocument } from "mongoose";
 import { CreateProductInput } from "../schema/products/core.product.schema";
 import { selectProductOptions } from "../controller/specs.controller";
 

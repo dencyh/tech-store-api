@@ -2,8 +2,6 @@ import config from "config";
 import { get } from "lodash";
 import SessionModel, { SessionDocument } from "../model/session.model";
 import { signJwt, verifyJwt } from "../utils/jwt";
-import { UserPrivateFields } from "../model/user.model";
-import { omit } from "lodash";
 import { FilterQuery, UpdateQuery } from "mongoose";
 import { findUser } from "./user.service";
 
