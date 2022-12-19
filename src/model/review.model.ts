@@ -16,7 +16,7 @@ export interface ReviewDocument extends mongoose.Document {
   user: UserDocument["_id"];
   product: ProductDocument["_id"];
   score: number;
-  review?: {
+  review: {
     advantages: string;
     disadvantages: string;
     comment: string;
@@ -28,8 +28,13 @@ export interface ReviewDocument extends mongoose.Document {
 const reviewSchema = new mongoose.Schema(
   {
     score: { type: Number, required: true },
-    review: { type: Object },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
+    review: { type: Object, required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true
+    }
   },
   {
     timestamps: true

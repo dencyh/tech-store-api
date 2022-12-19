@@ -15,7 +15,7 @@ export const createReviewSchema = object({
       advantages: string(),
       disadvantages: string(),
       comment: string()
-    }).optional()
+    })
   })
 });
 

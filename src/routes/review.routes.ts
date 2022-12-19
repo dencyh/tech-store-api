@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { createReviewHandler } from "../controller/review.controller";
+import {
+  createReviewHandler,
+  getProductReviewsHandler
+} from "../controller/review.controller";
 import validateResource from "../middleware/validateResource";
 import { createReviewSchema } from "../schema/review.schema";
 export const reviewRouter = Router();
@@ -9,4 +12,5 @@ reviewRouter.post(
   validateResource(createReviewSchema),
   createReviewHandler
 );
-// reviewRouter.get("/:productId", getSpecsByTypeHandler);
+
+reviewRouter.get("/:productId", getProductReviewsHandler);

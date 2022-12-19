@@ -18,7 +18,6 @@ export async function createReview({
       }
     | undefined;
 }) {
-  console.log(review);
   return ReviewModel.create({
     user: userId,
     product: productId,
@@ -27,9 +26,10 @@ export async function createReview({
   });
 }
 
-export async function findReview(
-  query: FilterQuery<ReviewDocument>
-  // options: QueryOptions = { lean: true }
-) {
+export async function findReview(query: FilterQuery<ReviewDocument>) {
   return ReviewModel.findOne(query);
+}
+
+export async function findProductReviews(query: FilterQuery<ReviewDocument>) {
+  return ReviewModel.find(query).populate("user");
 }

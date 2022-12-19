@@ -5,7 +5,11 @@ import { findCategoryByType } from "../services/category.service";
 import logger from "../utils/logger";
 import { updateSpecs } from "../services/specs.service";
 import { CreateReviewInput } from "../schema/review.schema";
-import { createReview, findReview } from "../services/review.service";
+import {
+  createReview,
+  findProductReviews,
+  findReview
+} from "../services/review.service";
 
 export async function createReviewHandler(
   req: Request<CreateReviewInput["params"], {}, CreateReviewInput["body"]>,
@@ -30,6 +34,22 @@ export async function createReviewHandler(
 
     return res.json(newReview);
   } catch (e: any) {
+    logger.error(e);
+    return res.status(500).send(e);
+  }
+}
+
+export async function getProductReviewsHandler(
+  req: Request<{ productId: string }>,
+  res: Response
+) {
+  try {
+    const { productId } = req.params;
+
+    const reviews = await findProductReviews({ product: productId });
+
+    return res.json(reviews);
+  } catch (e) {
     logger.error(e);
     return res.status(500).send(e);
   }
