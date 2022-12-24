@@ -9,7 +9,8 @@ import { CreateUserInput } from "../schema/user.schema";
 import {
   createUser,
   findUserById,
-  findUserByEmail
+  findUserByEmail,
+  updateUser
 } from "../services/user.service";
 import logger from "../utils/logger";
 import { v4 as uuid } from "uuid";
@@ -17,7 +18,9 @@ import { sendVerificationEmail, forgotPasswordEmail } from "../utils/mailer";
 import * as bcrypt from "bcrypt";
 import { createCart } from "../services/cart.service";
 import { createBookmark } from "../services/bookmark.service";
-import { omit } from "lodash";
+import { get, omit } from "lodash";
+import { reIssueAccessToken } from "../services/session.service";
+import { verifyJwt } from "../utils/jwt";
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -30,7 +33,7 @@ export async function createUserHandler(
     const userCart = await createCart(user._id);
     const userBookmarks = await createBookmark(user._id);
 
-    await sendVerificationEmail(user.toObject());
+    // await sendVerificationEmail(user.toObject());
 
     return res.json({ user });
   } catch (e: any) {
@@ -151,4 +154,51 @@ export async function getUsers(req: Request, res: Response) {
 
 export async function getCurrentUserHandler(req: Request, res: Response) {
   return res.send(omit(res.locals.user, "password"));
+}
+
+export async function updateUserHandler(
+  req: Request<{}, {}, {}>,
+  res: Response
+) {
+  try {
+    const id = res.locals.user._id;
+
+    const query = req.body;
+
+    if (Object.keys(query).length < 1) {
+      return res.status(400).send("Invalid update");
+    }
+
+    const user = await updateUser(id, query);
+
+    if (!user) {
+      return res.status(400).send("Cannot update user. User not found");
+    }
+
+    const refreshToken =
+      get(req, "cookies.refreshToken") || get(req, "headers.x-refresh");
+    const newAccessToken = await reIssueAccessToken({ refreshToken });
+
+    if (newAccessToken) {
+      res.setHeader("x-access-token", newAccessToken);
+
+      res.cookie("accessToken", newAccessToken, {
+        maxAge: 1000 * 60 * 15,
+        httpOnly: true,
+        domain: "localhost",
+        path: "/",
+        sameSite: "strict",
+        secure: false
+      });
+    }
+
+    const result = verifyJwt(newAccessToken as string, "accessTokenPublicKey");
+
+    res.locals.user = result.decoded;
+
+    return res.send("Пользователь обновлен");
+  } catch (e) {
+    logger.error(e);
+    return res.status(500).send(e);
+  }
 }

@@ -2,7 +2,7 @@ import UserModel, { UserDocument } from "../model/user.model";
 import logger from "../utils/logger";
 import * as bcrypt from "bcrypt";
 import { omit } from "lodash";
-import { FilterQuery } from "mongoose";
+import { FilterQuery, UpdateQuery } from "mongoose";
 
 export async function validatePassword({
   email,
@@ -26,6 +26,12 @@ export async function validatePassword({
 
 export function createUser(input: Partial<UserDocument>) {
   return UserModel.create(input);
+}
+
+export function updateUser(id: string, update: UpdateQuery<UserDocument>) {
+  return UserModel.findOneAndUpdate({ _id: id }, update, {
+    returnDocument: "after"
+  }).lean();
 }
 
 export function findUserById(id: string) {

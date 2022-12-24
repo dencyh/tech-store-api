@@ -2,6 +2,7 @@ import {
   createUserSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  updateUserSchema,
   verifyUserSchema
 } from "./../schema/user.schema";
 import { Router } from "express";
@@ -12,6 +13,7 @@ import {
   getCurrentUserHandler,
   getUsers,
   resetsPasswordHandler,
+  updateUserHandler,
   verifyUserHandler
 } from "../controller/user.controller";
 import { requireUser } from "../middleware/requireUser";
@@ -19,6 +21,11 @@ import { requireUser } from "../middleware/requireUser";
 export const userRouter = Router();
 
 userRouter.post("/", validateResource(createUserSchema), createUserHandler);
+userRouter.post(
+  "/update",
+  [requireUser, validateResource(updateUserSchema)],
+  updateUserHandler
+);
 userRouter.get("/", getUsers);
 userRouter.get(
   "/verify/:id/:verificationCode",

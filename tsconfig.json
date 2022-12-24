@@ -6,6 +6,8 @@
     "lib": ["esnext"],
     "esModuleInterop": true,
     "typeRoots": ["node_modules/yup"],
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true
   }
 }

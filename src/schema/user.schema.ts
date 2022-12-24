@@ -25,6 +25,29 @@ export const createUserSchema = object({
 
 export type CreateUserInput = TypeOf<typeof createUserSchema>["body"];
 
+export const updateUserSchema = object({
+  body: object({
+    firstName: string({
+      required_error: "First name is required"
+    }).optional(),
+    lastName: string({
+      required_error: "Last name is required"
+    }).optional(),
+    password: string({
+      required_error: "Password is required"
+    })
+      .min(6, "Password must be at least 6 characters")
+      .optional(),
+    email: string({
+      required_error: "Email is required"
+    })
+      .email("Email is not valid")
+      .optional()
+  })
+});
+
+export type UpdateUserInput = TypeOf<typeof updateUserSchema>["body"];
+
 export const verifyUserSchema = object({
   params: object({
     id: string({

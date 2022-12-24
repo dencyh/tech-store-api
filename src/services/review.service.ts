@@ -26,10 +26,14 @@ export async function createReview({
   });
 }
 
-export async function findReview(query: FilterQuery<ReviewDocument>) {
+export function findReview(query: FilterQuery<ReviewDocument>) {
   return ReviewModel.findOne(query);
 }
 
-export async function findProductReviews(query: FilterQuery<ReviewDocument>) {
+export function findProductReviews(query: FilterQuery<ReviewDocument>) {
   return ReviewModel.find(query).populate("user");
+}
+
+export function findReviewsByProductIds(query: FilterQuery<ReviewDocument>) {
+  return ReviewModel.find(query);
 }
