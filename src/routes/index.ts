@@ -8,6 +8,7 @@ import { authRouter } from "./session.routes";
 import { userRouter } from "./user.routes";
 import { bookmarkRouter } from "./bookmark.routes";
 import { specsRouter } from "./specs.routes";
+import { addressRouter } from "./address.routes";
 
 const rootRouter = Router();
 
@@ -22,5 +23,6 @@ rootRouter.use("/cart", cartRouter);
 rootRouter.use("/bookmarks", bookmarkRouter);
 rootRouter.use("/specs", specsRouter);
 rootRouter.use("/reviews", reviewRouter);
+rootRouter.use("/address", addressRouter);
 
 export default rootRouter;
