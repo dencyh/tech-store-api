@@ -2,6 +2,7 @@ import { number, object, string, tuple, TypeOf } from "zod";
 
 export const createAddressSchema = object({
   body: object({
+    // _id: string().min(1),
     coords: tuple([number(), number()]),
     text: string().min(1),
     country: string().min(1),
