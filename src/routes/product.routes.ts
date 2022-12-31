@@ -36,11 +36,7 @@ productRouter.patch(
   addProductImagesHandler
 );
 
-productRouter.get(
-  "/",
-  // validateResource(findManyProductsSchema),
-  findAllProductsHandler
-);
+productRouter.get("/", findAllProductsHandler);
 productRouter.get(
   "/:id",
   validateResource(findProductSchema),

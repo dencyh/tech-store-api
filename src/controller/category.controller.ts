@@ -7,7 +7,7 @@ export async function createCategoryHandler(
   req: Request<{}, {}, createCategoryInput>,
   res: Response
 ) {
-  const { name } = req.body;
+  const body = req.body;
   const image = req.file?.path;
 
   if (!image) {
@@ -15,7 +15,7 @@ export async function createCategoryHandler(
   }
 
   try {
-    const category = await createCategory({ name, image });
+    const category = await createCategory({ ...body, image });
 
     return res.json(category);
   } catch (e: any) {

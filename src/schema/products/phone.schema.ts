@@ -1,10 +1,11 @@
 import { literal, number, object, string, tuple, TypeOf, union } from "zod";
-import { createProductSchema } from "./core.product.schema";
+import { coreProductSchema } from "./core.product.schema";
 
 export const createPhoneSchema = object({
   body: object({
-    ...createProductSchema,
+    ...coreProductSchema,
     type: literal("smartphones", { required_error: "Type is required" }),
+    color: string(),
     specs: object({
       os: string({ required_error: "OS is required" }),
       screenSize: number({ required_error: "Screen size is required" }),

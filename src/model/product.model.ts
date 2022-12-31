@@ -2,14 +2,11 @@ import { string } from "zod";
 import mongoose from "mongoose";
 import { UserDocument } from "./user.model";
 import { CategoryDocument } from "./category.model";
-import {
-  CreateProductInput,
-  productTypeSchemas
-} from "../schema/products/core.product.schema";
+import { CreateProductInput } from "../schema/products/core.product.schema";
 import { BrandDocument } from "./brand.model";
 
 export interface ProductDocument extends mongoose.Document {
-  type: keyof typeof productTypeSchemas;
+  type: CreateProductInput["type"];
   name: string;
   price: number;
   category: CategoryDocument["_id"];

@@ -45,8 +45,8 @@ export async function setSpecsHandler(
         const unique: Unique<any> = {};
 
         specsKeys.forEach((specKey) => {
-          allProductsByType.forEach((product) => {
-            const value =
+          allProductsByType.forEach((product: any) => {
+            const value: any =
               product["specs"][specKey as keyof typeof product.specs];
 
             const dictionaryKey = specKey + "." + value.toString();
