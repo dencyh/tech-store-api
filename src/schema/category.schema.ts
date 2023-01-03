@@ -1,9 +1,10 @@
-import { object, string, TypeOf } from "zod";
+import { array, object, string, TypeOf } from "zod";
 
 export const createCategorySchema = object({
   body: object({
     name: string({ required_error: "Category name is required" }),
-    type: string({ required_error: "Category type is required" })
+    type: string({ required_error: "Category type is required" }),
+    images: array(string())
   })
 });
 

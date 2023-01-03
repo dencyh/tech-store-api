@@ -6,7 +6,6 @@ import {
   findProductSchema
 } from "./../schema/products/core.product.schema";
 import { Router } from "express";
-import { uploadImage } from "../middleware/uploadImage";
 
 import {
   createProductHandler,
@@ -17,7 +16,7 @@ import {
 } from "../controller/product.controller";
 import validateResource from "../middleware/validateResource";
 import { validateProduct } from "../middleware/validateProduct";
-import { resizeImage } from "../middleware/resizeImage";
+import { uploadImages } from "../middleware/uploadImages";
 import { bufferImages } from "../middleware/bufferImage";
 
 export const productRouter = Router();
@@ -30,7 +29,7 @@ productRouter.patch(
   [
     requireUser,
     bufferImages,
-    resizeImage("product"),
+    uploadImages("product", { resize: true }),
     validateResource(addProductImagesSchema)
   ],
   addProductImagesHandler

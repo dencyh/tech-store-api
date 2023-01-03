@@ -5,15 +5,20 @@ import {
   createCategoryHandler,
   getCategoriesHandler
 } from "../controller/category.controller";
-import { uploadImage } from "../middleware/uploadImage";
 import validateResource from "../middleware/validateResource";
+import { bufferImages } from "../middleware/bufferImage";
+import { uploadImages } from "../middleware/uploadImages";
 
 export const categoryRouter = Router();
 
 categoryRouter.post(
   "/",
-  uploadImage("category/").single("image"),
-  [requireUser, validateResource(createCategorySchema)],
+  [
+    bufferImages,
+    uploadImages("category"),
+    requireUser,
+    validateResource(createCategorySchema)
+  ],
   createCategoryHandler
 );
 

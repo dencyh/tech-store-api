@@ -1,16 +1,12 @@
 import sharp from "sharp";
 import { NextFunction, Request, Response } from "express";
 import { v4 as uuid } from "uuid";
-import path from "path";
 
-// TODO Add wrapper to pass parametrs later in routes
-
-export function resizeImage(dest: string) {
+export function uploadImages(dest: string, options?: { resize: boolean }) {
   return async function (req: Request, res: Response, next: NextFunction) {
     if (!req.files) return next();
     req.body.images = [];
     const files = [...(req.files as Express.Multer.File[])];
-    console.log(files);
     await Promise.all(
       files.map(async (file) => {
         const filename = `${uuid()}`;
@@ -18,16 +14,18 @@ export function resizeImage(dest: string) {
 
         // Original
         await sharp(file.buffer)
-          .toFormat("png")
-          .toFile(`static/${dest}/${filename}.png`);
+          .toFormat("webp")
+          .toFile(`static/${dest}/${filename}.webp`);
 
         // Minified
-        await sharp(file.buffer)
-          .resize(64, 64)
-          .toFormat("png")
-          .toFile(`static/${dest}/${newFilename}.png`);
+        if (options?.resize) {
+          await sharp(file.buffer)
+            .resize(64, 64)
+            .toFormat("webp")
+            .toFile(`static/${dest}/${newFilename}.webp`);
+        }
 
-        req.body.images.push(filename);
+        req.body.images.push(`static/${dest}/${filename}.webp`);
       })
     );
 

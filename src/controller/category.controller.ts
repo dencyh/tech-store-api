@@ -7,15 +7,15 @@ export async function createCategoryHandler(
   req: Request<{}, {}, createCategoryInput>,
   res: Response
 ) {
-  const body = req.body;
-  const image = req.file?.path;
+  const { images, ...rest } = req.body;
+  const image = images[0];
 
   if (!image) {
     return res.status(400).send("Image path is required");
   }
 
   try {
-    const category = await createCategory({ ...body, image });
+    const category = await createCategory({ ...rest, image });
 
     return res.json(category);
   } catch (e: any) {
