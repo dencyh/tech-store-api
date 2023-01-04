@@ -26,7 +26,9 @@ app.use(
 );
 app.use(
   "/static/category",
-  express.static(path.join(__dirname, "../static/category"))
+  express.static(path.join(__dirname, "../static/category"), {
+    maxAge: 31536000
+  })
 );
 app.use(
   "/static/product",
